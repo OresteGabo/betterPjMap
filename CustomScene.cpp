@@ -61,7 +61,7 @@ void CustomScene::loadWaysFromDatabase() {
         loadSpecificWays("landuse", QColor(34, 139, 34, 150));
     }));
 }
-/*
+
 void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
     QString connectionName = QString("%1_connection").arg(type);
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL", connectionName); // Unique connection name
@@ -143,110 +143,6 @@ void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
 
         for (const auto &polygon : polygons) {
             addPolygon(polygon, pen, QBrush(color));
-        }
-        for (const auto &path : paths) {
-            addPath(path, pen, QBrush(Qt::NoBrush));
-        }
-
-        qDebug() << "Finished loading" << type << "ways.";
-        this->update();
-    }, Qt::QueuedConnection);
-
-    emit debugMessage("Finished loading " + type);
-}
-*/
-void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
-    // Create a unique database connection for this query
-    QString connectionName = QString("%1_connection").arg(type);
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL", connectionName);
-    db.setDatabaseName("OSMData");
-    db.setHostName("127.0.0.1");
-    db.setUserName("oreste");
-    db.setPassword("Muhirehonore@1*");
-
-    if (!db.open()) {
-        qDebug() << "Database connection failed for" << type << ":" << db.lastError().text();
-        return;
-    }
-
-    emit debugMessage("Started loading " + type);
-
-    // Fetch ways of the specified type
-    QSqlQuery query(db);
-    query.prepare("SELECT id FROM ways WHERE id IN (SELECT element_id FROM tags WHERE tag_key = :type)");
-    query.bindValue(":type", type);
-
-    if (!query.exec()) {
-        qDebug() << "Query execution failed for ways of type" << type << ":" << query.lastError().text();
-        db.close();
-        QSqlDatabase::removeDatabase(connectionName);
-        return;
-    }
-
-    QVector<QPolygonF> polygons; // Store geometry
-    QVector<QPainterPath> paths; // Store non-closed paths
-    QVector<QGraphicsPolygonItem*> polygonItems; // Store scene items
-
-    while (query.next()) {
-        QString wayId = query.value(0).toString();
-        QVector<QPointF> wayPoints;
-
-        // Fetch nodes for the current way
-        QSqlQuery wayQuery(db);
-        wayQuery.prepare("SELECT node_id FROM ways_nodes WHERE way_id = :wayId ORDER BY node_order");
-        wayQuery.bindValue(":wayId", wayId);
-
-        if (!wayQuery.exec()) {
-            qDebug() << "Way query execution failed for way ID" << wayId << ":" << wayQuery.lastError().text();
-            continue;
-        }
-
-        while (wayQuery.next()) {
-            QString nodeId = wayQuery.value(0).toString();
-
-            // Fetch latitude and longitude of the node
-            QSqlQuery nodeQuery(db);
-            nodeQuery.prepare("SELECT lat, lon FROM nodes WHERE id = :id");
-            nodeQuery.bindValue(":id", nodeId);
-
-            if (nodeQuery.exec() && nodeQuery.next()) {
-                double lat = nodeQuery.value(0).toDouble();
-                double lon = nodeQuery.value(1).toDouble();
-                QPointF pos = latLonToXY(lat, lon);
-                wayPoints.append(pos);
-            } else {
-                qDebug() << "Node query failed for node ID" << nodeId << ":" << nodeQuery.lastError().text();
-            }
-        }
-
-        // Determine if the way forms a closed polygon or a path
-        if (!wayPoints.isEmpty()) {
-            if (wayPoints.first() == wayPoints.last()) {
-                polygons.append(QPolygonF(wayPoints)); // Closed polygon
-            } else {
-                QPainterPath path;
-                path.moveTo(wayPoints.first());
-                for (const QPointF &point : wayPoints) {
-                    path.lineTo(point);
-                }
-                paths.append(path); // Open path
-            }
-        }
-    }
-
-    // Close and remove the database connection
-    db.close();
-    QSqlDatabase::removeDatabase(connectionName);
-
-    // Update the scene in the main thread
-    QMetaObject::invokeMethod(this, [this, type, color, polygons, paths, &polygonItems]() {
-        QPen pen(color);
-        pen.setJoinStyle(Qt::RoundJoin);
-        pen.setCapStyle(Qt::RoundCap);
-
-        for (const auto &polygon : polygons) {
-            auto polygonItem = addPolygon(polygon, pen, QBrush(color));
-            polygonItems.append(polygonItem); // Keep track of added polygon items
         }
         for (const auto &path : paths) {
             addPath(path, pen, QBrush(Qt::NoBrush));
