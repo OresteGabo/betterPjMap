@@ -1,0 +1,57 @@
+@startuml
+abstract class Astre {
+    - masse : double
+    - vitesse : double
+    + afficher() : void
+    + distanceMax() : double
+}
+
+class Satellite extends Astre {
+    - distance : double
+    - centre : Astre
+    + setCentre(c : Astre) : void
+}
+
+class SystemeStellaire {
+    - astres : List<Astre>
+    + ajouter(astre : Astre) : void
+    + retirer(astre : Astre) : void
+    + afficher() : void
+    + calculerDistanceMax() : double
+}
+
+Astre <|-- Satellite
+SystemeStellaire o-- Astre
+@enduml
+
+@startuml
+object "Soleil" as Soleil {
+}
+
+object "Terre" as Terre {
+    distance = 149
+}
+
+object "Lune" as Lune {
+    distance = 5
+}
+
+object "Mars" as Mars {
+    distance = 228
+}
+
+object "Deimos" as Deimos {
+    distance = 2
+}
+
+object "Phobos" as Phobos {
+    distance = 3
+}
+
+Soleil --> Terre
+Terre --> Lune
+Soleil --> Mars
+Mars --> Deimos
+Mars --> Phobos
+@enduml
+

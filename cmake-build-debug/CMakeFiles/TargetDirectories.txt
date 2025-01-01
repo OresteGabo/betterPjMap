@@ -1,0 +1,5 @@
+/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/CMakeFiles/GraphicsInQt.dir
+/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/CMakeFiles/GraphicsInQt_autogen_timestamp_deps.dir
+/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/CMakeFiles/GraphicsInQt_autogen.dir
