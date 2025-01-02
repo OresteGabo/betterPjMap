@@ -1,13 +1,16 @@
-
 #include "CustomScene.h"
+
 #include "Car.h"
 #include <QtConcurrent/QtConcurrent>
 #include <QSqlError>
+#include <cmath>
+
 CustomScene::CustomScene(int width, int height, QObject *parent)
-        :QGraphicsScene(parent), hexGridGroup(nullptr), isGridVisible(false)  {
+        : QGraphicsScene(parent),isGridVisible(false) {
     setSceneRect(0, 0, width, height);
     setBackgroundBrush(QBrush(Qt::lightGray));
     loadWaysFromDatabase();
+    initializeMailles();
 }
 
 void CustomScene::loadNodesFromDatabase() {
@@ -27,40 +30,6 @@ void CustomScene::loadNodesFromDatabase() {
         }
     }
 }
-/*
-void CustomScene::loadWaysFromDatabase() {
-    // Define QFutureWatcher objects
-    auto highwayWatcher = new QFutureWatcher<void>(this);
-    auto waterWatcher = new QFutureWatcher<void>(this);
-    auto buildingWatcher = new QFutureWatcher<void>(this);
-    auto landuseWatcher = new QFutureWatcher<void>(this);
-
-    auto updateScene = [this]() {
-        qDebug() << "Scene updated after a task completed.";
-        this->update();
-    };
-
-    connect(highwayWatcher, &QFutureWatcher<void>::finished, this, updateScene);
-    connect(highwayWatcher, &QFutureWatcher<void>::finished, this, updateScene);
-    connect(waterWatcher, &QFutureWatcher<void>::finished, this, updateScene);
-    connect(buildingWatcher, &QFutureWatcher<void>::finished, this, updateScene);
-    connect(landuseWatcher, &QFutureWatcher<void>::finished, this, updateScene);
-
-    highwayWatcher->setFuture(QtConcurrent::run([this]() {
-        loadSpecificWays("highway", QColor(64, 64, 64));
-    }));
-    waterWatcher->setFuture(QtConcurrent::run([this]() {
-        loadSpecificWays("waterway", QColor(0, 150, 255, 120));
-    }));
-
-    buildingWatcher->setFuture(QtConcurrent::run([this]() {
-        loadSpecificWays("building", QColor(150, 75, 0, 150));
-    }));
-
-    landuseWatcher->setFuture(QtConcurrent::run([this]() {
-        loadSpecificWays("landuse", QColor(34, 139, 34, 150));
-    }));
-}
 
 void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
     QString connectionName = QString("%1_connection").arg(type);
@@ -76,14 +45,11 @@ void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
     }
 
     emit debugMessage("Started loading " + type);
+
     QSqlQuery query(db);
     query.prepare("SELECT id FROM ways WHERE id IN (SELECT element_id FROM tags WHERE tag_key = :type)");
     query.bindValue(":type", type);
     query.exec();
-
-    QVector<QPolygonF> polygons;
-    QVector<QPainterPath> paths;
-
     while (query.next()) {
         QString wayId = query.value(0).toString();
         QVector<QPointF> wayPoints;
@@ -113,98 +79,6 @@ void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
             }
         }
 
-        if (!wayPoints.isEmpty()) {
-            if (wayPoints.first() == wayPoints.last()) {
-                polygons.append(QPolygonF(wayPoints));
-            } else {
-                QPainterPath path;
-                path.moveTo(wayPoints.first());
-                for (const QPointF &point : wayPoints) {
-                    path.lineTo(point);
-                }
-                paths.append(path);
-            }
-        }
-    }
-
-    // Close the database connection
-    db.close();
-    QSqlDatabase::removeDatabase(connectionName);
-
-    // Update GUI in the main thread
-    QMetaObject::invokeMethod(this, [this, type, color, polygons, paths]() {
-        QPen pen(color);
-        if (type != "highway") {
-            pen.setCosmetic(true);
-        }
-
-        pen.setJoinStyle(Qt::RoundJoin);
-        pen.setCapStyle(Qt::RoundCap);
-
-        for (const auto &polygon : polygons) {
-            addPolygon(polygon, pen, QBrush(color));
-        }
-        for (const auto &path : paths) {
-            addPath(path, pen, QBrush(Qt::NoBrush));
-        }
-
-        emit debugMessage( "Finished loading " +type + " ways.");
-        this->update();
-    }, Qt::QueuedConnection);
-
-    emit debugMessage("Finished loading " + type);
-}
-*/
-void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
-    QString connectionName = QString("%1_connection").arg(type);
-    QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL", connectionName); // Unique connection name
-    db.setDatabaseName("OSMData");
-    db.setHostName("127.0.0.1");
-    db.setUserName("oreste");
-    db.setPassword("Muhirehonore@1*");
-
-    if (!db.open()) {
-        qDebug() << "Database connection failed for" << type << ":" << db.lastError().text();
-        return;
-    }
-
-    emit debugMessage("Started loading " + type);
-
-    QSqlQuery query(db);
-    query.prepare("SELECT id FROM ways WHERE id IN (SELECT element_id FROM tags WHERE tag_key = :type)");
-    query.bindValue(":type", type);
-    query.exec();
-    int counterrr=0;
-    while (query.next()) {
-        QString wayId = query.value(0).toString();
-        QVector<QPointF> wayPoints;
-
-        QSqlQuery wayQuery(db);
-        wayQuery.prepare("SELECT node_id FROM ways_nodes WHERE way_id = :wayId ORDER BY node_order");
-        wayQuery.bindValue(":wayId", wayId);
-        wayQuery.exec();
-
-        while (wayQuery.next()) {
-            QString nodeId = wayQuery.value(0).toString();
-
-            QSqlQuery nodeQuery(db);
-            nodeQuery.prepare("SELECT lat, lon FROM nodes WHERE id = :id");
-            nodeQuery.bindValue(":id", nodeId);
-
-            if (!nodeQuery.exec()) {
-                qDebug() << "Node query execution failed:" << nodeQuery.lastError().text();
-                continue;
-            }
-
-            if (nodeQuery.next()) {
-                double lat = nodeQuery.value(0).toDouble();
-                double lon = nodeQuery.value(1).toDouble();
-                QPointF pos = latLonToXY(lat, lon);
-                wayPoints.append(pos);
-            }
-        }
-
-        // Render the way immediately
         if (!wayPoints.isEmpty()) {
             QMetaObject::invokeMethod(this, [this, type, color, wayPoints]() {
                 if (wayPoints.first() == wayPoints.last()) {
@@ -219,19 +93,17 @@ void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
                     }
                     addPath(path, QPen(color, 1, Qt::SolidLine), QBrush(Qt::NoBrush));
                 }
-                // Update the scene to reflect the new item
                 this->update();
-
             }, Qt::QueuedConnection);
         }
     }
 
-    // Close the database connection
     db.close();
     QSqlDatabase::removeDatabase(connectionName);
 
     emit debugMessage("Finished loading " + type);
 }
+
 void CustomScene::loadWaysFromDatabase() {
     auto highwayWatcher = new QFutureWatcher<void>(this);
     auto waterWatcher = new QFutureWatcher<void>(this);
@@ -248,7 +120,7 @@ void CustomScene::loadWaysFromDatabase() {
     });
 
     connect(waterWatcher, &QFutureWatcher<void>::finished, this, [this, waterWatcher, cleanupWatcher]() {
-        emit debugMessage( "Waterways loaded.");
+        emit debugMessage("Waterways loaded.");
         cleanupWatcher(waterWatcher);
     });
 
@@ -258,7 +130,7 @@ void CustomScene::loadWaysFromDatabase() {
     });
 
     connect(landuseWatcher, &QFutureWatcher<void>::finished, this, [this, landuseWatcher, cleanupWatcher]() {
-        emit debugMessage( "Landuse loaded.");
+        emit debugMessage("Landuse loaded.");
         cleanupWatcher(landuseWatcher);
     });
 
@@ -274,6 +146,29 @@ void CustomScene::loadWaysFromDatabase() {
     landuseWatcher->setFuture(QtConcurrent::run([this]() {
         loadSpecificWays("landuse", QColor(34, 139, 34, 150));
     }));
+}
+
+// Initialize the hexagons (mailles)
+void CustomScene::initializeMailles() {
+    const double hexSize = 35.0; // Hexagon size
+    const double xOffset = 1.5 * hexSize; // Horizontal spacing
+    const double yOffset = sqrt(3) * hexSize; // Vertical spacing
+
+    int rows = height() / yOffset + 2; // Number of rows
+    int cols = width() / xOffset + 2;  // Number of columns
+
+    for (int row = 0; row < rows; ++row) {
+        for (int col = 0; col < cols; ++col) {
+            double x = col * xOffset;
+            double y = row * yOffset + (col % 2) * (yOffset / 2); // Offset for staggered grid
+
+            auto maille = new Maille(QPointF(x, y), hexSize);
+            addItem(maille); // Add to scene
+            mailles.append(maille); // Store reference in vector
+        }
+    }
+
+    qDebug() << "Initialized hexagonal grid with" << mailles.size() << "hexagons.";
 }
 
 QPointF CustomScene::latLonToXY(double lat, double lon) {
@@ -305,158 +200,32 @@ QJsonObject CustomScene::loadJsonFile(const QString &configFileName) {
     return jsonDoc.object();
 }
 
-void CustomScene::addCar(const QString &carId, const QPointF &position) {
-    /*double speed = QRandomGenerator::global()->bounded(30, 101);       // Random speed
-    double frequency = QRandomGenerator::global()->bounded(1, 10);    // Random frequency
-    auto *car = new Car(carId, position, speed, frequency);
-    addItem(car);
-    qDebug()<<"Add item called";
-    carItems.append(car);*/
-}
+void CustomScene::toggleMailles() {
+    for (auto maille : mailles) {
+        maille->toggleVisibility();
 
-
-void CustomScene::updateCarPositions(qreal elapsedTime) {
-    for (auto carItem : carItems) {
-        QPointF currentPosition = carItem->pos();
-        QPointF newPosition = currentPosition + QPointF(1.0 * elapsedTime, 0);
-        carItem->setPos(newPosition);
-    }
-}
-
-void CustomScene::moveCar(QGraphicsEllipseItem *car, const QString &currentNodeId, const QString &nextNodeId, double speed) {
-    QPointF currentPos = latLonToXY(getLat(currentNodeId), getLon(currentNodeId));
-    QPointF nextPos = latLonToXY(getLat(nextNodeId), getLon(nextNodeId));
-
-    QPointF direction = nextPos - currentPos;
-    double length = std::sqrt(direction.x() * direction.x() + direction.y() * direction.y());
-    direction /= length;
-
-    QPointF newPosition = car->pos() + direction * speed * 0.1;
-    car->setPos(newPosition);
-
-    if ((newPosition - nextPos).manhattanLength() < 1.0) {
-        QString newTarget = decideNextNode(nextNodeId);
-        moveCar(car, nextNodeId, newTarget, speed);
-    }
-}
-
-QString CustomScene::decideNextNode(const QString &currentNodeId) {
-    auto neighbors = getNeighbors(currentNodeId);
-
-    if (neighbors.size() == 1) {
-        return neighbors.first();
     }
 
-    return neighbors[qrand() % neighbors.size()];
-}
-
-void CustomScene::startSimulation() {
-    auto timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, [this]() {
-        for (auto car : carItems) {
-            moveCar(car, car->data(0).toString(), "nextNodeId", 50.0);
-        }
-    });
-    timer->start(100);
-}
-QVector<QString> CustomScene::getNeighbors(const QString &nodeId) {
-    return adjacencyList[nodeId];
-}
-
-double CustomScene::getLat(const QString &nodeId) {
-    // Query the database or use a preloaded map
-    return nodeMap[nodeId].y();
-}
-
-double CustomScene::getLon(const QString &nodeId) {
-    return nodeMap[nodeId].x();
-}
-
-
-
-void CustomScene::toggleHexGrid() {
-    if (isGridVisible) {
-        clearHexGrid();
-    } else {
-        drawHexGrid();
-    }
     isGridVisible = !isGridVisible;
+    update();
 }
+void CustomScene::updateHexagonsWithCars(const QVector<Car*>& cars) {
+    for (auto& maille : mailles) {
+        maille->setIsCarInside(false);  // Reset the flag for each hexagon
 
-bool CustomScene::isHexGridVisible() const {
-    return isGridVisible;
-}
-
-void CustomScene::drawHexGrid() {
-    if (hexGridGroup) {
-        emit debugMessage( "Hex grid is already drawn.");
-        return;
-    }
-
-    hexGridGroup = new QGraphicsItemGroup();
-    const double hexSize = 35.0; // Size of each hexagon (side length)
-    const double xOffset = 1.5 * hexSize;     // Horizontal spacing between centers
-    const double yOffset = sqrt(3) * hexSize; // Vertical spacing between centers
-
-    int rows = height() / yOffset + 2; // Adjust rows to ensure complete coverage
-    int cols = width() / xOffset + 2;  // Adjust columns to ensure complete coverage
-
-    for (int row = 0; row < rows; ++row) {
-        for (int col = 0; col < cols; ++col) {
-            double x = col * xOffset;
-            double y = row * yOffset + (col % 2) * (yOffset / 2);
-
-            // Create hexagon
-            QPolygonF hexagon;
-            for (int i = 0; i < 6; ++i) {
-                double angle = 2 * M_PI / 6 * i;
-                hexagon << QPointF(x + hexSize * qCos(angle), y + hexSize * qSin(angle));
-            }
-
-            auto hexItem = new QGraphicsPolygonItem(hexagon);
-            hexItem->setPen(QPen(Qt::black, 0.5)); // Thin gray lines for the grid
-            hexItem->setBrush(Qt::NoBrush);
-            hexGridGroup->addToGroup(hexItem);
-        }
-    }
-
-    addItem(hexGridGroup);
-    emit debugMessage( "Hex grid drawn.");
-}
-
-
-
-void CustomScene::clearHexGrid() {
-    if (hexGridGroup) {
-        removeItem(hexGridGroup);
-        delete hexGridGroup;
-        hexGridGroup = nullptr;
-        emit debugMessage( "Hex grid cleared.");
-    }
-}
-
-void CustomScene::updatePolygonColorsBasedOnCarPositions() {
-    for (auto polygonItem : polygons) {
-        QString carsInside;
-        bool carInside = false;
-
-        for (const auto &item : carItems) {
-            // Safely cast the item to Car
-            Car *car = dynamic_cast<Car *>(item);
-            if (car && polygonItem->polygon().containsPoint(car->pos(), Qt::OddEvenFill)) {
-                carInside = true;
-                carsInside += car->getId() + " "; // Now we can safely access getId()
+        for (const auto& car : cars) {
+            if (maille->isPointInside(car->pos())) { // Check if the car is inside the hexagon
+                maille->setIsCarInside(true);
+                break;  // No need to check other cars once one is inside
             }
         }
 
-
-        // Update the polygon's color
-        if (carInside) {
-            polygonItem->setBrush(QColor(0, 0, 150, 120)); // Highlight color
-            emit debugMessage( "Polygon contains cars: "+ carsInside);
-        } else {
-            polygonItem->setBrush(Qt::NoBrush); // Reset to transparent
-            emit debugMessage( "Polygon has no car insude of it");
+        if(maille->getIsVisible()){
+            if (maille->isCarInside1()) {
+                maille->setBrush(QBrush(Qt::red));  // Example: Highlight with red if a car is inside
+            } else {
+                maille->setBrush(maille->getOriginalBrush());  // Reset to the original brush
+            }
         }
     }
 }

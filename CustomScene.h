@@ -1,6 +1,6 @@
 #ifndef CUSTOMSCENE_H
 #define CUSTOMSCENE_H
-
+#include "Maille.h"
 #include <QGraphicsScene>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
@@ -23,18 +23,15 @@ Q_OBJECT
 public:
     CustomScene(int width, int height, QObject *parent = nullptr);
     static QPointF latLonToXY(double lat, double lon);
-    void addCar(const QString &carId, const QPointF &position); // Add car method
     void updateCarPositions(qreal elapsedTime);
     void startSimulation(); // Start simulation of car movements
-    /*QPointF placeCarOnWay(const QString &wayId);
-    void generatePathForCar(const QString &carId); // Generate a path for a car dynamically
-    void placeCarOnPath(Car &car, const Path &path); // Place car on a path
-     */
     bool isHexGridVisible() const;
-    void toggleHexGrid();
+    void toggleMailles();
     void updatePolygonColorsBasedOnCarPositions();
+    void initializeMailles();
+    void updateHexagonCoverage(const QVector<QPointF>& vehiclePositions);
 
-
+    void updateHexagonsWithCars(const QVector<Car*>& cars);
 signals:
     void debugMessage(const QString &message); // Signal to send debug messages
 
@@ -54,17 +51,13 @@ private:
 
     QMap<QString, QVector<QString>> adjacencyList; // Adjacency list for nodes
     QMap<QString, QPointF> nodeMap; // Map for node positions (lat, lon to QPointF)
-    //Path generatePathFromWay(const QString &wayId);
-
-    //void assignPathToCar(const QString &carId, const Path &path);
-
-    //QVector<PathNode> fetchNodesForWay(const QString &wayId);
 
     void drawHexGrid();
     QGraphicsItemGroup* hexGridGroup; // Group to manage the hexagons
     bool isGridVisible;
 
     void clearHexGrid();
+    QVector<Maille*> mailles;
     QVector<QGraphicsPolygonItem *> polygons; // Store the polygon items
 
 };

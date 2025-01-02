@@ -23,7 +23,8 @@
 #include "Node.h"
 #include "DatabaseManager.h"
 #include <QGraphicsLineItem>
-
+#include <QtConcurrent/QtConcurrent>
+#include <QFutureWatcher>
 class MainWidget : public QWidget {
 Q_OBJECT
 
@@ -33,11 +34,12 @@ public:
     void onDisplayInfo();
 
 signals:
-
+signals:
+    void carAdded(Car *car);
 
 private slots:
     void clearDebugText();
-
+    void toggleMailles();
 
 
 public slots:
@@ -45,6 +47,8 @@ public slots:
     void onAddCars();
     void restartClicked();
     void sliderValueChanged();
+
+
 
 
 private:
@@ -74,13 +78,15 @@ private:
 
     void initializeNodeMap();
 
-    void toggleHexGrid();
+    //void toggleHexGrid();
 
     void handleCarPathCompletion(Car *car, const QString &lastNodeId);
     QList<QPair<Car*, Car*>> connections;
     QList<QGraphicsLineItem*> connectionLines;
 
     void onDisplayConnections();
+
+
 };
 
 #endif // MAINWIDGET_H

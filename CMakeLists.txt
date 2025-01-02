@@ -31,6 +31,8 @@ add_executable(GraphicsInQt main.cpp
         Car.h
         MainWidget.cpp
         MainWidget.h
+        Maille.cpp
+        Maille.h
 )
 target_link_libraries(GraphicsInQt
         Qt5::Core

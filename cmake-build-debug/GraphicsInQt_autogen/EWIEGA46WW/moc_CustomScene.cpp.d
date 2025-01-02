@@ -1,6 +1,7 @@
 /home/oreste/Downloads/GraphicsInQt\ Version\ livrable\ 1/GraphicsInQt\ (3rd\ copy)/cmake-build-debug/GraphicsInQt_autogen/EWIEGA46WW/moc_CustomScene.cpp: /home/oreste/Downloads/GraphicsInQt\ Version\ livrable\ 1/GraphicsInQt\ (3rd\ copy)/CustomScene.h \
   /home/oreste/Downloads/GraphicsInQt\ Version\ livrable\ 1/GraphicsInQt\ (3rd\ copy)/cmake-build-debug/GraphicsInQt_autogen/moc_predefs.h \
   /home/oreste/Downloads/GraphicsInQt\ Version\ livrable\ 1/GraphicsInQt\ (3rd\ copy)/Car.h \
+  /home/oreste/Downloads/GraphicsInQt\ Version\ livrable\ 1/GraphicsInQt\ (3rd\ copy)/Maille.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/asm-generic/errno.h \
   /usr/include/assert.h \
@@ -66,6 +67,7 @@
   /usr/include/c++/11/bits/shared_ptr.h \
   /usr/include/c++/11/bits/shared_ptr_atomic.h \
   /usr/include/c++/11/bits/shared_ptr_base.h \
+  /usr/include/c++/11/bits/specfun.h \
   /usr/include/c++/11/bits/std_abs.h \
   /usr/include/c++/11/bits/std_function.h \
   /usr/include/c++/11/bits/std_mutex.h \
@@ -103,6 +105,7 @@
   /usr/include/c++/11/cerrno \
   /usr/include/c++/11/climits \
   /usr/include/c++/11/clocale \
+  /usr/include/c++/11/cmath \
   /usr/include/c++/11/compare \
   /usr/include/c++/11/concepts \
   /usr/include/c++/11/cstddef \
@@ -144,6 +147,18 @@
   /usr/include/c++/11/streambuf \
   /usr/include/c++/11/string \
   /usr/include/c++/11/string_view \
+  /usr/include/c++/11/tr1/bessel_function.tcc \
+  /usr/include/c++/11/tr1/beta_function.tcc \
+  /usr/include/c++/11/tr1/ell_integral.tcc \
+  /usr/include/c++/11/tr1/exp_integral.tcc \
+  /usr/include/c++/11/tr1/gamma.tcc \
+  /usr/include/c++/11/tr1/hypergeometric.tcc \
+  /usr/include/c++/11/tr1/legendre_function.tcc \
+  /usr/include/c++/11/tr1/modified_bessel_func.tcc \
+  /usr/include/c++/11/tr1/poly_hermite.tcc \
+  /usr/include/c++/11/tr1/poly_laguerre.tcc \
+  /usr/include/c++/11/tr1/riemann_zeta.tcc \
+  /usr/include/c++/11/tr1/special_function_util.h \
   /usr/include/c++/11/tuple \
   /usr/include/c++/11/type_traits \
   /usr/include/c++/11/typeinfo \

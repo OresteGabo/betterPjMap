@@ -50,7 +50,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
 
     // Connect button signals
     connect(restart, &QPushButton::clicked, this, &MainWidget::restartClicked);
-    connect(afficherMailles, &QPushButton::clicked, this, &MainWidget::toggleHexGrid);
+    connect(afficherMailles, &QPushButton::clicked, this, &MainWidget::toggleMailles);
+
     connect(slider, &QSlider::valueChanged, this, &MainWidget::sliderValueChanged);
 
     // Top layout with buttons and slider
@@ -105,7 +106,7 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     setLayout(mainLayout);
     setFixedSize(width - 50, height - 100);
 
-    adjacencyList=DatabaseManager::buildAdjacencyList();
+    adjacencyList=DatabaseManager::buildNodesAdjacencyList();
     initializeNodeMap();
 
 }
@@ -158,11 +159,9 @@ void MainWidget::onRunButtonClicked() {
         runButton->setText("Stop Simulation");
     }
 }
+/*
 void MainWidget::onAddCars() {
     int numberOfCars = carsCount->text().toInt();
-
-    // Build the adjacency list
-    QMap<QString, QVector<QString>> adjacencyList = DatabaseManager::buildNodesAdjacencyList();
 
     for (int i = 0; i < numberOfCars; ++i) {
         while (true) {
@@ -208,6 +207,54 @@ void MainWidget::onAddCars() {
     onDisplayInfo(); // Update debug text area
     graphicsView->scene()->update(); // Refresh the scene
 }
+*/
+
+
+void MainWidget::onAddCars() {
+    int numberOfCars = carsCount->text().toInt();
+
+    for (int i = 0; i < numberOfCars; ++i) {
+        while (true) {
+            QStringList nodes = adjacencyList.keys();
+            QString startNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
+            QString endNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
+
+            if (startNode == endNode) {
+                continue; // Avoid same start and end
+            }
+
+            QVector<QString> nodePath = DatabaseManager::findPath(startNode, endNode, adjacencyList);
+
+            if (!nodePath.isEmpty()) {
+                QVector<QPointF> path;
+                for (const QString &nodeId : nodePath) {
+                    path.append(DatabaseManager::getPositionByNodeId(nodeId));
+                }
+
+                QPointF initialPosition = path.first();
+                auto car = new Car(QString::number(cars.size() + 1), initialPosition);
+                car->setPath(path, nodePath);
+
+                connect(car, &Car::reachedEndOfPath, this, [=](const QString &lastNodeId) {
+                    handleCarPathCompletion(car, lastNodeId);
+                });
+
+                cars.append(car);
+                scene->addItem(car);
+
+                qDebug() << "Car" << car->getId() << "added with path from" << startNode << "to" << endNode;
+                break; // Path successfully assigned
+            }
+
+            qDebug() << "No path found between" << startNode << "and" << endNode << ", retrying...";
+        }
+    }
+
+    onDisplayInfo(); // Update debug text area
+    graphicsView->scene()->update(); // Refresh the scene
+}
+
+
 
 
 
@@ -246,7 +293,8 @@ void MainWidget::updateAnimation() {
         car->updatePosition(elapsedTime);
     }
     updateConnections();
-    scene->updatePolygonColorsBasedOnCarPositions();
+
+    scene->updateHexagonsWithCars(cars);
     scene->update(); // Refresh the scene
 }
 
@@ -287,9 +335,9 @@ void MainWidget::initializeNodeMap() {
 }
 
 
-void MainWidget::toggleHexGrid() {
-    auto scene = static_cast<CustomScene*>(graphicsView->scene());
-    scene->toggleHexGrid(); // Assuming CustomScene has a toggleHexGrid method
+void MainWidget::toggleMailles() {
+    // Simply delegate the toggle request to the scene
+    scene->toggleMailles();
 }
 void MainWidget::updateConnections() {
     connections.clear(); // Reset connections
