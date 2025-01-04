@@ -118,3 +118,7 @@ bool Car::isWithinFrequencyRange(const Car *otherCar) const {
 
     return distance <= maxRadius;
 }
+
+void Car::setSpeed(double d) {
+    speed=d;
+}

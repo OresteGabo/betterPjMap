@@ -31,6 +31,17 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     afficherMailles->setFixedSize(50, 50);
 
     // OpenStreetMap Logo
+    auto compassLogo = new QLabel(this);
+    compassLogo->setFixedHeight(64);
+    compassLogo->setFixedWidth(64);
+    QPixmap compassPixmap("images/compass.png"); // Replace with the actual path to your logo file
+    //compassLogo->setPixmap(compassPixmap.scaled(100, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation)); // Scale image
+    compassLogo->setPixmap(compassPixmap);
+
+    compassLogo->move(1450,50);
+    compassLogo->raise();
+
+    // OpenStreetMap Logo
     auto osmLogo = new QLabel(this);
     osmLogo->setFixedHeight(530);
     osmLogo->setFixedWidth(530);
@@ -44,8 +55,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
 
     // Initialize the slider
     slider = new QSlider(Qt::Horizontal);
-    slider->setRange(1, 10);
-    slider->setValue(5);
+    slider->setRange(1, 5);
+    slider->setValue(1);
 
     // Label to display slider value
     auto speedLabel = new QLabel(QString::number(slider->value()) + "X + rapide");
@@ -286,7 +297,9 @@ void MainWidget::updateAnimation() {
 
 void MainWidget::sliderValueChanged(int value) {
     int interval = 1000 / value; // Example: higher value -> faster speed (smaller interval)
-
+    for (auto &car : cars) {
+        car->setSpeed(car->getSpeed()*value);
+    }
     if (animationTimer->isActive()) {
         animationTimer->setInterval(interval); // Adjust the timer's interval dynamically
     }

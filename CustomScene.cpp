@@ -11,7 +11,7 @@ CustomScene::CustomScene(int width, int height, QObject *parent)
     //setBackgroundBrush(QBrush(Qt::lightGray));
     setBackgroundBrush(QBrush(QColor(220,220,220)));
     loadWaysFromDatabase();
-    initializeMailles();
+    //initializeMailles();
     //drawLambert93Grid(1.0);
 }
 
@@ -203,6 +203,9 @@ QJsonObject CustomScene::loadJsonFile(const QString &configFileName) {
 }
 
 void CustomScene::toggleMailles() {
+    if (mailles.isEmpty()) {
+        initializeMailles(); // Only initialize if not already done
+    }
     for (auto maille : mailles) {
         maille->toggleVisibility();
     }

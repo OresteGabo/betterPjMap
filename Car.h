@@ -10,9 +10,12 @@
 #include <QRandomGenerator>
 class Car :public QObject, public QGraphicsEllipseItem {
     Q_OBJECT
+
+
+
 public:
     Car(const QString &id, const QPointF &initialPosition,
-        double speed=QRandomGenerator::global()->bounded(30, 80.0),
+        double speed=QRandomGenerator::global()->bounded(10, 40.0),
         double frequency=QRandomGenerator::global()->bounded(10, 100),
         int puissance=QRandomGenerator::global()->bounded(0, 255),
         QGraphicsItem *parent = nullptr);
@@ -30,6 +33,7 @@ public:
     void setCarImage(const QPixmap &image); // Set the car's image
     void setPath(const QVector<QPointF> &newPath, const QVector<QString> &newNodeIds);
     bool isWithinFrequencyRange(const Car *otherCar) const;
+    void setSpeed(double d);
 signals:
     void carClicked(); // Signal emitted when the car is clicked
 
