@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWidget_t {
-    QByteArrayData data[11];
-    char stringdata0[122];
+    QByteArrayData data[12];
+    char stringdata0[124];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -42,13 +42,14 @@ QT_MOC_LITERAL(6, 45, 13), // "toggleMailles"
 QT_MOC_LITERAL(7, 59, 18), // "onRunButtonClicked"
 QT_MOC_LITERAL(8, 78, 9), // "onAddCars"
 QT_MOC_LITERAL(9, 88, 14), // "restartClicked"
-QT_MOC_LITERAL(10, 103, 18) // "sliderValueChanged"
+QT_MOC_LITERAL(10, 103, 18), // "sliderValueChanged"
+QT_MOC_LITERAL(11, 122, 1) // "v"
 
     },
     "MainWidget\0carAdded\0\0Car*\0car\0"
     "clearDebugText\0toggleMailles\0"
     "onRunButtonClicked\0onAddCars\0"
-    "restartClicked\0sliderValueChanged"
+    "restartClicked\0sliderValueChanged\0v"
 };
 #undef QT_MOC_LITERAL
 
@@ -74,7 +75,7 @@ static const uint qt_meta_data_MainWidget[] = {
        7,    0,   54,    2, 0x0a /* Public */,
        8,    0,   55,    2, 0x0a /* Public */,
        9,    0,   56,    2, 0x0a /* Public */,
-      10,    0,   57,    2, 0x0a /* Public */,
+      10,    1,   57,    2, 0x0a /* Public */,
 
  // signals: parameters
     QMetaType::Void, 0x80000000 | 3,    4,
@@ -85,7 +86,7 @@ static const uint qt_meta_data_MainWidget[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void,
+    QMetaType::Void, QMetaType::Int,   11,
 
        0        // eod
 };
@@ -102,7 +103,7 @@ void MainWidget::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 3: _t->onRunButtonClicked(); break;
         case 4: _t->onAddCars(); break;
         case 5: _t->restartClicked(); break;
-        case 6: _t->sliderValueChanged(); break;
+        case 6: _t->sliderValueChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {

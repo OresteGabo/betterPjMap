@@ -25,6 +25,7 @@
 #include <QGraphicsLineItem>
 #include <QtConcurrent/QtConcurrent>
 #include <QFutureWatcher>
+#include <QElapsedTimer>
 class MainWidget : public QWidget {
 Q_OBJECT
 
@@ -46,7 +47,7 @@ public slots:
     void onRunButtonClicked();
     void onAddCars();
     void restartClicked();
-    void sliderValueChanged();
+    void sliderValueChanged(int v);
 
 
 
@@ -85,6 +86,7 @@ private:
     QList<QGraphicsLineItem*> connectionLines;
 
     void onDisplayConnections();
+    QElapsedTimer simulationTimer;
 
 
 };

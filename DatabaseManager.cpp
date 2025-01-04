@@ -10,8 +10,8 @@ DatabaseManager::DatabaseManager(
 {
     initialiseDatabase(dbName, user, password);
     //parseData(fileName);
-    //ConfigManager cf = ConfigManager();
-    //calculateAndSaveBoundsToConfig(cf);
+    ConfigManager cf = ConfigManager();
+    calculateAndSaveBoundsToConfig(cf);
 }
 
 bool DatabaseManager::parseNodes(QXmlStreamReader& xml, QSqlQuery& query) {

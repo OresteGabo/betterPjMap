@@ -7,7 +7,9 @@
 #include "DatabaseManager.h"
 #include "MainWidget.h"
 #include <iostream>
+
 using namespace std;
+
 
 
 int main(int argc, char *argv[]) {

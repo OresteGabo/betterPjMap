@@ -11,6 +11,7 @@ CustomScene::CustomScene(int width, int height, QObject *parent)
     setBackgroundBrush(QBrush(Qt::lightGray));
     loadWaysFromDatabase();
     initializeMailles();
+    //drawLambert93Grid(1.0);
 }
 
 void CustomScene::loadNodesFromDatabase() {
@@ -226,6 +227,114 @@ void CustomScene::updateHexagonsWithCars(const QVector<Car*>& cars) {
             } else {
                 maille->setBrush(maille->getOriginalBrush());  // Reset to the original brush
             }
+        }
+    }
+}
+
+//Projection lambert93
+// Convert WGS84 (lat, lon) to Lambert 93 (x, y)
+QPointF CustomScene::latLonToLambert93(double lat, double lon) {
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+        qDebug() << "Invalid input: Latitude" << lat << ", Longitude" << lon;
+        return {std::numeric_limits<double>::quiet_NaN(),
+                       std::numeric_limits<double>::quiet_NaN()};
+    }
+
+    PJ_CONTEXT *context = proj_context_create();
+    PJ *proj = proj_create_crs_to_crs(context,
+                                      "EPSG:4326", // WGS84
+                                      "EPSG:2154", // Lambert 93
+                                      nullptr);
+
+    if (!proj) {
+        qDebug() << "Projection creation failed!";
+        proj_context_destroy(context);
+        return {std::numeric_limits<double>::quiet_NaN(),
+                       std::numeric_limits<double>::quiet_NaN()};
+    }
+
+    PJ_COORD coord = proj_coord(lon, lat, 0, 0);
+    PJ_COORD result = proj_trans(proj, PJ_FWD, coord);
+
+    if (result.xy.x == HUGE_VAL || result.xy.y == HUGE_VAL) {
+        qDebug() << "Projection transformation failed for:"
+                 << "Latitude" << lat << ", Longitude" << lon;
+        proj_destroy(proj);
+        proj_context_destroy(context);
+        return {std::numeric_limits<double>::quiet_NaN(),
+                       std::numeric_limits<double>::quiet_NaN()};
+    }
+
+    proj_destroy(proj);
+    proj_context_destroy(context);
+
+    return {result.xy.x, result.xy.y};
+}
+
+// Convert Lambert 93 (x, y) to WGS84 (lat, lon)
+QPointF CustomScene::lambert93ToLatLon(double x, double y) {
+    auto context = proj_context_create();
+    auto proj = proj_create_crs_to_crs(context,
+                                      "EPSG:2154", // Lambert 93
+                                      "EPSG:4326", // WGS84
+                                      nullptr);
+
+    auto coord = proj_coord(x, y, 0, 0);
+    auto result = proj_trans(proj, PJ_INV, coord);
+
+    proj_destroy(proj);
+    proj_context_destroy(context);
+
+    return {result.xy.y, result.xy.x}; // Latitude, Longitude
+}
+
+void CustomScene::drawLambert93Grid(double spacing) {
+
+    QJsonObject jsonObj = loadJsonFile();
+    QJsonObject boundObj = jsonObj.value("Bound").toObject();
+
+
+    //int width = screenObj.value("width").toInt();
+    //int height = screenObj.value("height").toInt();
+    /*double minLat = boundObj.value("minLat").toDouble();
+    double maxLat = boundObj.value("maxLat").toDouble();
+    double minLon = boundObj.value("minLon").toDouble();
+    double maxLon = boundObj.value("maxLon").toDouble();*/
+
+    double width = sceneRect().width();
+    double height = sceneRect().height();
+
+    double minLat = std::max(-90.0, boundObj.value("minLat").toDouble());
+    double maxLat = std::min(90.0, boundObj.value("maxLat").toDouble());
+    double minLon = std::max(-180.0, boundObj.value("minLon").toDouble());
+    double maxLon = std::min(180.0, boundObj.value("maxLon").toDouble());
+
+    QPointF topLeft = latLonToLambert93(minLat, minLon);
+    QPointF bottomRight = latLonToLambert93(maxLat, maxLon);
+
+    if (std::isnan(topLeft.x()) || std::isnan(topLeft.y()) ||
+        std::isnan(bottomRight.x()) || std::isnan(bottomRight.y())) {
+        qDebug() << "Invalid Lambert 93 bounds for grid.";
+        return;
+    }
+
+    for (double x = std::ceil(topLeft.x() / spacing) * spacing; x <= bottomRight.x(); x += spacing) {
+        auto line = new QGraphicsLineItem(x, topLeft.y(), x, bottomRight.y());
+        line->setPen(QPen(Qt::gray, 1, Qt::DashLine));
+        addItem(line);
+    }
+    for (double y = std::ceil(topLeft.y() / spacing) * spacing; y <= bottomRight.y(); y += spacing) {
+        auto line = new QGraphicsLineItem(topLeft.x(), y, bottomRight.x(), y);
+        line->setPen(QPen(Qt::gray, 1, Qt::DashLine));
+        addItem(line);
+    }
+
+    for (double x = std::ceil(topLeft.x() / spacing) * spacing; x <= bottomRight.x(); x += spacing) {
+        for (double y = std::ceil(topLeft.y() / spacing) * spacing; y <= bottomRight.y(); y += spacing) {
+            auto label = new QGraphicsTextItem(QString("(%1, %2)").arg(x).arg(y));
+            label->setPos(x, y);
+            label->setDefaultTextColor(Qt::blue);
+            addItem(label);
         }
     }
 }

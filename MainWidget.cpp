@@ -1,9 +1,9 @@
 #include "MainWidget.h"
-//#include "Hexagon.h"
 #include <QLabel>
 #include <fstream>
 #include <QIntValidator>
 #include <QRandomGenerator>
+#include <QApplication>
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     QJsonObject jsonObj = ConfigManager::loadJsonFile();
     QJsonObject screenObj = jsonObj.value("MainWindow").toObject();
@@ -33,15 +33,21 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     // Initialize the slider
     slider = new QSlider(Qt::Horizontal);
     slider->setRange(1, 10);
+    slider->setValue(5);
 
     // Label to display slider value
-    auto speedLabel = new QLabel(QString::number(slider->value()) + " X + rapide");
+    auto speedLabel = new QLabel(QString::number(slider->value()) + "X + rapide");
     speedLabel->setAlignment(Qt::AlignCenter);
 
     // Update the label when the slider value changes
     connect(slider, &QSlider::valueChanged, [speedLabel](int value) {
         speedLabel->setText(QString::number(value) + "X + rapide");
     });
+    // Connect slider to animation speed
+    connect(slider, &QSlider::valueChanged, this, &MainWidget::sliderValueChanged);
+
+    // Set the default timer interval based on the slider's default value
+    //
 
     // Layout for label and slider
     auto sliderLayout = new QVBoxLayout;
@@ -52,7 +58,8 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     connect(restart, &QPushButton::clicked, this, &MainWidget::restartClicked);
     connect(afficherMailles, &QPushButton::clicked, this, &MainWidget::toggleMailles);
 
-    connect(slider, &QSlider::valueChanged, this, &MainWidget::sliderValueChanged);
+    //connect(slider, &QSlider::valueChanged, this, &MainWidget::sliderValueChanged);
+
 
     // Top layout with buttons and slider
     auto topLayout = new QHBoxLayout;
@@ -108,16 +115,21 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
 
     adjacencyList=DatabaseManager::buildNodesAdjacencyList();
     initializeNodeMap();
+    simulationTimer.start();
+    sliderValueChanged(slider->value());
 
 }
 
 void MainWidget::restartClicked() {
+    bool animRunning=animationTimer->isActive();
     // Stop animation
     if (animationTimer->isActive()) {
         animationTimer->stop();
     }
 
     qDebug() << "Restart simulation";
+
+    int totalCars= cars.size();
 
     // Remove all cars from the scene
     for (auto &car : cars) {
@@ -140,8 +152,10 @@ void MainWidget::restartClicked() {
     // Add new cars with new destinations
     onAddCars();
 
-    // Restart animation
-    animationTimer->start(16);
+    if(animRunning) {
+        // Restart animation
+        animationTimer->start(16);
+    }
 }
 
 
@@ -159,55 +173,7 @@ void MainWidget::onRunButtonClicked() {
         runButton->setText("Stop Simulation");
     }
 }
-/*
-void MainWidget::onAddCars() {
-    int numberOfCars = carsCount->text().toInt();
 
-    for (int i = 0; i < numberOfCars; ++i) {
-        while (true) {
-            // Randomly select start and end nodes
-            QStringList nodes = adjacencyList.keys();
-            QString startNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
-            QString endNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
-
-            if (startNode == endNode) {
-                continue; // Avoid assigning the same node as start and end
-            }
-
-            // Find a path between the nodes
-            QVector<QString> nodePath = DatabaseManager::findPath(startNode, endNode, adjacencyList);
-
-            if (!nodePath.isEmpty()) {
-                // Convert node IDs to positions
-                QVector<QPointF> path;
-                for (const QString &nodeId : nodePath) {
-                    path.append(DatabaseManager::getPositionByNodeId(nodeId));
-                }
-
-                // Create and assign the car
-                QPointF initialPosition = path.first();
-
-                auto car = new Car(QString::number(cars.size() + 1), initialPosition);
-                car->setPath(path, nodePath); // Assign the path to the car
-
-                connect(car, &Car::reachedEndOfPath, this, [=](const QString &lastNodeId) {
-                    handleCarPathCompletion(car, lastNodeId);
-                });
-
-                cars.append(car);
-                scene->addItem(car);
-                qDebug() << "Car" << car->getId() << "added with path from" << startNode << "to" << endNode;
-                break; // Path successfully assigned, exit retry loop
-            }
-
-            qDebug() << "No path found between" << startNode << "and" << endNode << ", retrying...";
-        }
-    }
-
-    onDisplayInfo(); // Update debug text area
-    graphicsView->scene()->update(); // Refresh the scene
-}
-*/
 
 
 void MainWidget::onAddCars() {
@@ -243,6 +209,10 @@ void MainWidget::onAddCars() {
                 scene->addItem(car);
 
                 qDebug() << "Car" << car->getId() << "added with path from" << startNode << "to" << endNode;
+
+                // Update the scene immediately after adding the car
+                scene->update();          // Redraw the scene
+                QApplication::processEvents();
                 break; // Path successfully assigned
             }
 
@@ -288,7 +258,8 @@ void MainWidget::onDisplayInfo() {
 }
 
 void MainWidget::updateAnimation() {
-    qreal elapsedTime = animationTimer->interval() / 1000.0; // Time step in seconds
+
+    qreal elapsedTime = simulationTimer.restart() / 1000.0; // Time step in seconds
     for (auto &car : cars) {
         car->updatePosition(elapsedTime);
     }
@@ -299,8 +270,15 @@ void MainWidget::updateAnimation() {
 }
 
 
-void MainWidget::sliderValueChanged() {
-    qDebug() << "Slider value changed";
+void MainWidget::sliderValueChanged(int value) {
+    int interval = 1000 / value; // Example: higher value -> faster speed (smaller interval)
+
+    if (animationTimer->isActive()) {
+        animationTimer->setInterval(interval); // Adjust the timer's interval dynamically
+    }
+
+    qDebug() << "Slider value changed to:" << value << ", Timer interval set to:" << interval;
+
 }
 
 void MainWidget::initializeNodeMap() {

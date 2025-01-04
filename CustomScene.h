@@ -12,7 +12,7 @@
 #include <QVector>
 #include <QTimer>
 #include <QJsonObject>
-//#include "Path.h"
+#include <proj.h>
 #include "Car.h"
 
 class CustomScene : public QGraphicsScene {
@@ -30,6 +30,9 @@ public:
     void updatePolygonColorsBasedOnCarPositions();
     void initializeMailles();
     void updateHexagonCoverage(const QVector<QPointF>& vehiclePositions);
+    static QPointF latLonToLambert93(double lat, double lon);
+    static QPointF lambert93ToLatLon(double x, double y);
+    void drawLambert93Grid(double spacing);
 
     void updateHexagonsWithCars(const QVector<Car*>& cars);
 signals:

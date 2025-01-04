@@ -382,4 +382,5 @@
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stdarg.h \
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stddef.h \
   /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h \
-  /usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h
+  /usr/lib/gcc/x86_64-linux-gnu/11/include/syslimits.h \
+  /usr/local/include/proj.h

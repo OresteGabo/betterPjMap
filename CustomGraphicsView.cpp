@@ -4,12 +4,15 @@
 
 #include "CustomGraphicsView.h"
 #include "ConfigManager.h"
+#include "CustomScene.h"
 #include <QPoint>
 #include <QPlainTextEdit>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QGraphicsItem>
 #include <QGraphicsProxyWidget>
+#include <QToolTip>
+
 CustomGraphicsView::CustomGraphicsView(QGraphicsScene* scene,QWidget *parent)
         : QGraphicsView(parent), isDragging(false) {
     setRenderHint(QPainter::Antialiasing);
@@ -64,6 +67,15 @@ void CustomGraphicsView::mousePressEvent(QMouseEvent *event) {
         setCursor(Qt::ClosedHandCursor);
     }
     QGraphicsView::mousePressEvent(event);
+
+    //for lambert93
+    QPointF scenePoint = mapToScene(event->pos());
+    QPointF lambert93Coords = CustomScene::latLonToLambert93(scenePoint.y(), scenePoint.x());
+    qDebug() << "Lambert 93 Coordinates:" << lambert93Coords;
+
+    // Optionally show in a tooltip
+    QToolTip::showText(event->globalPos(), QString("Lambert 93: (%1, %2)").arg(lambert93Coords.x()).arg(lambert93Coords.y()));
+    QGraphicsView::mousePressEvent(event);
 }
 
 void CustomGraphicsView::mouseMoveEvent(QMouseEvent *event) {
@@ -76,8 +88,6 @@ void CustomGraphicsView::mouseMoveEvent(QMouseEvent *event) {
     }
     QGraphicsView::mouseMoveEvent(event);
 }
-
-
 void CustomGraphicsView::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         isDragging = false;
