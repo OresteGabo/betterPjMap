@@ -1,92 +1,56 @@
 # ninja log v5
-16	2890	1735979991526554036	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
+15	3214	1735980277670791782	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
 1	5	0	CMakeFiles/clean.additional	eed0bc8b5dafb410
 3597	5476	1735864090725564280	CMakeFiles/GraphicsInQt.dir/Maille.cpp.o	ceaec8ccff160834
-498	8047	1735979241195241667	CMakeFiles/GraphicsInQt.dir/CustomScene.cpp.o	59c57ca80c7af661
+17	2553	1735981295508418082	CMakeFiles/GraphicsInQt.dir/CustomScene.cpp.o	59c57ca80c7af661
 298	2289	1735864087537525073	CMakeFiles/GraphicsInQt.dir/Way.cpp.o	48f82cb769f68f19
-3	15	1735979988652553640	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+4	15	1735981292972448732	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
 501	7428	1735979240573247653	CMakeFiles/GraphicsInQt.dir/DatabaseManager.cpp.o	f7cab192875f45f6
-2890	3392	1735979992026554109	GraphicsInQt	7096a0acd943cd91
 4	161	1735864078832417669	build.ninja	6e05c48341870074
+2553	3049	1735981296003412113	GraphicsInQt	7096a0acd943cd91
 13	37	1735364278135524669	/home/oreste/CLionProjects/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	fe80f26776335e65
-3	15	1735979988652553640	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+4	15	1735981292972448732	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
 495	7466	1735979240614247258	CMakeFiles/GraphicsInQt.dir/GraphicsInQt_autogen/mocs_compilation.cpp.o	cbc80da11712fecb
 502	7266	1735979240414249184	CMakeFiles/GraphicsInQt.dir/CustomGraphicsView.cpp.o	9d26c3d1ed2bcdcc
 3	14	1734680341247470460	/home/oreste/CLionProjects/GraphicsInQt/cmake-build-debug/GraphicsInQt_autogen/timestamp	7f3c648c7a43c4bc
 2006	3334	1735864088583537945	CMakeFiles/GraphicsInQt.dir/ConfigManager.cpp.o	4ef84eb2b584b53a
-3	15	1735979988652553640	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+4	15	1735981292972448732	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
 497	5253	1735979238401268628	CMakeFiles/GraphicsInQt.dir/Node.cpp.o	e4602c55dcecce7a
 5	9	0	clean	f17fe4045e498119
-5253	8702	1735979241851235364	CMakeFiles/GraphicsInQt.dir/Car.cpp.o	b18550b98f0cfd2
 5	184	1735702932657259902	/home/oreste/Downloads/GraphicsInQt (3rd copy)-20241231T024037Z-001/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	9b8955e969760fc0
+5253	8702	1735979241851235364	CMakeFiles/GraphicsInQt.dir/Car.cpp.o	b18550b98f0cfd2
 496	8332	1735979241480238929	CMakeFiles/GraphicsInQt.dir/main.cpp.o	d40620b8e48f577c
 5	184	1735702932657259902	/home/oreste/Downloads/GraphicsInQt (3rd copy)-20241231T024037Z-001/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	9b8955e969760fc0
 13	37	1735364278135524669	/home/oreste/CLionProjects/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	fe80f26776335e65
-3	15	1735979988652553640	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+4	15	1735981292972448732	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
 3	14	1734680341247470460	/home/oreste/CLionProjects/GraphicsInQt/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	7f3c648c7a43c4bc
-3	16	1735980007837557168	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	16	1735980007837557168	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-3	16	1735980007837557168	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	16	1735980007837557168	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-17	3097	1735980010916557926	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-3097	3592	1735980011410558053	GraphicsInQt	7096a0acd943cd91
-3	14	1735980025265562144	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980025265562144	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-3	14	1735980025265562144	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980025265562144	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-15	2931	1735980028180563136	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-2931	3445	1735980028691563315	GraphicsInQt	7096a0acd943cd91
-3	16	1735980051373572624	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	16	1735980051373572624	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-3	16	1735980051373572624	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	16	1735980051373572624	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-17	2998	1735980054354574044	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-2998	3537	1735980054889574304	GraphicsInQt	7096a0acd943cd91
-4	15	1735980068469581377	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-4	15	1735980068469581377	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-4	15	1735980068469581377	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-4	15	1735980068469581377	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-17	2930	1735980071381583012	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-2930	3432	1735980071882583298	GraphicsInQt	7096a0acd943cd91
-4	17	1735980086317592049	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-4	17	1735980086317592049	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-4	17	1735980086317592049	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-4	17	1735980086317592049	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-18	3409	1735980089708594249	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-3409	3917	1735980090214594582	GraphicsInQt	7096a0acd943cd91
-4	15	1735980114998612347	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-4	15	1735980114998612347	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-4	15	1735980114998612347	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-4	15	1735980114998612347	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-16	2909	1735980117890614603	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-2909	3415	1735980118393614999	GraphicsInQt	7096a0acd943cd91
-3	14	1735980172393663870	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980172393663870	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-3	14	1735980172393663870	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980172393663870	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-15	2956	1735980175333666878	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-2956	3462	1735980175836667396	GraphicsInQt	7096a0acd943cd91
-3	14	1735980193081685765	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980193081685765	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-3	14	1735980193081685765	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980193081685765	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-15	3237	1735980196302689325	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-3237	3745	1735980196807689886	GraphicsInQt	7096a0acd943cd91
-4	17	1735980217038713179	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-4	17	1735980217038713179	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-4	17	1735980217038713179	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-4	17	1735980217038713179	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-18	3004	1735980220022716744	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-3004	3511	1735980220526717349	GraphicsInQt	7096a0acd943cd91
-3	14	1735980244066746639	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980244066746639	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-3	14	1735980244066746639	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980244066746639	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-15	2936	1735980246986750409	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-2936	3454	1735980247501751077	GraphicsInQt	7096a0acd943cd91
-3	14	1735980274473787325	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980274473787325	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-3	14	1735980274473787325	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
-3	14	1735980274473787325	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
-15	3214	1735980277670791782	CMakeFiles/GraphicsInQt.dir/MainWidget.cpp.o	e9fe56be44d11ef
-3214	3737	1735980278191792512	GraphicsInQt	7096a0acd943cd91
+4	15	1735981315313183454	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+4	15	1735981315313183454	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+4	15	1735981315313183454	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+4	15	1735981315313183454	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+16	2527	1735981317823154310	CMakeFiles/GraphicsInQt.dir/CustomScene.cpp.o	59c57ca80c7af661
+2527	3024	1735981318319148567	GraphicsInQt	7096a0acd943cd91
+4	15	1735981346641828917	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+4	15	1735981346641828917	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+4	15	1735981346641828917	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+4	15	1735981346641828917	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+16	2522	1735981349146801416	CMakeFiles/GraphicsInQt.dir/CustomScene.cpp.o	59c57ca80c7af661
+2522	3026	1735981349648795921	GraphicsInQt	7096a0acd943cd91
+3	15	1735981652528223956	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+3	15	1735981652528223956	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+3	15	1735981652528223956	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+3	15	1735981652528223956	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+16	2513	1735981655024207819	CMakeFiles/GraphicsInQt.dir/CustomScene.cpp.o	59c57ca80c7af661
+2513	3046	1735981655554204403	GraphicsInQt	7096a0acd943cd91
+4	15	1735981791838417456	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+4	15	1735981791838417456	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+4	15	1735981791838417456	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+4	15	1735981791838417456	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+16	2545	1735981794366404438	CMakeFiles/GraphicsInQt.dir/CustomScene.cpp.o	59c57ca80c7af661
+2545	3055	1735981794874401828	GraphicsInQt	7096a0acd943cd91
+3	14	1735981918075826550	GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+3	14	1735981918075826550	GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+3	14	1735981918075826550	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/timestamp	cf6bbe3de9d1ee05
+3	14	1735981918075826550	/home/oreste/Downloads/GraphicsInQt Version livrable 1/GraphicsInQt (3rd copy)/cmake-build-debug/GraphicsInQt_autogen/mocs_compilation.cpp	cf6bbe3de9d1ee05
+15	2525	1735981920584815933	CMakeFiles/GraphicsInQt.dir/CustomScene.cpp.o	59c57ca80c7af661
+2525	3025	1735981921082813831	GraphicsInQt	7096a0acd943cd91

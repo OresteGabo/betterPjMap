@@ -206,11 +206,17 @@ void CustomScene::toggleMailles() {
     if (mailles.isEmpty()) {
         initializeMailles(); // Only initialize if not already done
     }
+
+    // Ensure that the visibility state aligns with `isGridVisible`
     for (auto maille : mailles) {
-        maille->toggleVisibility();
+        if (isGridVisible) {
+            maille->setVisible(false); // Hide if currently visible
+        } else {
+            maille->setVisible(true);  // Show if currently hidden
+        }
     }
 
-    isGridVisible = !isGridVisible;
+    isGridVisible = !isGridVisible; // Toggle the visibility state
     update();
 }
 void CustomScene::updateHexagonsWithCars(const QVector<Car*>& cars) {
