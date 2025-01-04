@@ -30,6 +30,18 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     afficherMailles->setIconSize(QSize(32, 32));
     afficherMailles->setFixedSize(50, 50);
 
+    // OpenStreetMap Logo
+    auto osmLogo = new QLabel(this);
+    osmLogo->setFixedHeight(530);
+    osmLogo->setFixedWidth(530);
+    QPixmap logoPixmap("images/osm.png"); // Replace with the actual path to your logo file
+    osmLogo->setPixmap(logoPixmap.scaled(100, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation)); // Scale image
+    osmLogo->setPixmap(logoPixmap);
+
+    osmLogo->move(1450,650);
+    osmLogo->raise();
+
+
     // Initialize the slider
     slider = new QSlider(Qt::Horizontal);
     slider->setRange(1, 10);
@@ -104,7 +116,6 @@ MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
     auto mainLayout = new QHBoxLayout(this);
     mainLayout->addWidget(graphicsView, 3);
     mainLayout->addLayout(debugLayout, 1);
-
     // Animation timer
     animationTimer = new QTimer(this);
     connect(animationTimer, &QTimer::timeout, this, &MainWidget::updateAnimation);
@@ -127,7 +138,7 @@ void MainWidget::restartClicked() {
         animationTimer->stop();
     }
 
-    qDebug() << "Restart simulation";
+    qInfo() << "Restart simulation";
 
     int totalCars= cars.size();
 
@@ -175,7 +186,10 @@ void MainWidget::onRunButtonClicked() {
 }
 
 
-
+/**
+ * While loop inside the function ensure that as long as the path is not found,
+ * the code is re-executed again, so other startNode and endnode are picked and recalculate the path again
+ */
 void MainWidget::onAddCars() {
     int numberOfCars = carsCount->text().toInt();
 

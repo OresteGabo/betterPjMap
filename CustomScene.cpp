@@ -8,7 +8,8 @@
 CustomScene::CustomScene(int width, int height, QObject *parent)
         : QGraphicsScene(parent),isGridVisible(false) {
     setSceneRect(0, 0, width, height);
-    setBackgroundBrush(QBrush(Qt::lightGray));
+    //setBackgroundBrush(QBrush(Qt::lightGray));
+    setBackgroundBrush(QBrush(QColor(220,220,220)));
     loadWaysFromDatabase();
     initializeMailles();
     //drawLambert93Grid(1.0);
@@ -204,7 +205,6 @@ QJsonObject CustomScene::loadJsonFile(const QString &configFileName) {
 void CustomScene::toggleMailles() {
     for (auto maille : mailles) {
         maille->toggleVisibility();
-
     }
 
     isGridVisible = !isGridVisible;
