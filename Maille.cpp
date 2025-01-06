@@ -5,8 +5,8 @@
 //
 
 #include "Maille.h"
-Maille::Maille(const QPointF &center, double size,bool isCarInside, QGraphicsItem *parent)
-        : QGraphicsPolygonItem(parent), isVisible(true) ,isCarInside(isCarInside) {
+Maille::Maille(const QPointF &center, double size,bool d_isCarInside, QGraphicsItem *parent)
+        : QGraphicsPolygonItem(parent), isVisible(true) ,d_isCarInside(d_isCarInside) ,color(QColor(0, 0, 128, 100)){
     // Create the hexagonal shape
     for (int i = 0; i < 6; ++i) {
         double angle = 2 * M_PI / 6 * i;
@@ -16,7 +16,8 @@ Maille::Maille(const QPointF &center, double size,bool isCarInside, QGraphicsIte
     setPolygon(hexagon);
 
     // Set initial brush and pen
-    originalBrush = QBrush(QColor(128, 128, 128, 100)); // Light gray fill with some transparency
+    //originalBrush = QBrush(QColor(128, 128, 128, 100)); // Light gray fill with some transparency
+    //originalBrush=QBrush(color);
     originalPen = QPen(Qt::black, 0.5);                 // Thin black border
 
     setBrush(originalBrush);
@@ -35,16 +36,16 @@ void Maille::toggleVisibility() {
     }
     isVisible = !isVisible; // Toggle the visibility state
 }
-bool Maille::isPointInside(const QPointF& point) const {
-    return hexagon.containsPoint(point, Qt::OddEvenFill);
+bool Maille::isCarInside(const Car& car) const {
+    return hexagon.containsPoint(car.pos(), Qt::OddEvenFill);
 }
 
 void Maille::setIsCarInside(bool i) {
-    isCarInside=i;
+    d_isCarInside=i;
 }
 
-bool Maille::isCarInside1() const {
-    return isCarInside;
+bool Maille::isCarInside() const {
+    return d_isCarInside;
 }
 
 const QColor &Maille::getColor() const {
@@ -57,4 +58,9 @@ const QPen &Maille::getOriginalPen() const {
 
 const QBrush &Maille::getOriginalBrush() const {
     return originalBrush;
+}
+
+void Maille::setColor(const QColor &color) {
+    Maille::color = color;
+    originalBrush=QBrush(color);
 }

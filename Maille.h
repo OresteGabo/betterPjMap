@@ -11,6 +11,7 @@
 #include <QGraphicsPolygonItem>
 #include <cmath>
 #include <QDebug>
+#include "Car.h"
 class Maille : public QGraphicsPolygonItem {
 public:
     explicit Maille(const QPointF &center, double size,bool isCarInside=false, QGraphicsItem *parent = nullptr)
@@ -20,18 +21,22 @@ public:
 
     void toggleVisibility() ;
 
-    bool isPointInside(const QPointF &point) const;
+    bool isCarInside(const Car &point) const;
     bool getIsVisible()const{return isVisible;}
     void setIsCarInside(bool i);
 private:
     QColor color;
+public:
+    void setColor(const QColor &color);
+
+private:
     int alpha;
     bool isVisible;
     QBrush originalBrush;
     QPen originalPen;
-    bool isCarInside;
+    bool d_isCarInside;
 public:
-    bool isCarInside1() const;
+    bool isCarInside() const;
 
     const QColor &getColor() const;
 

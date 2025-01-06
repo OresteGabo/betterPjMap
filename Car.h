@@ -56,6 +56,10 @@ private:
 
     QPixmap carImage; // Car image
     QColor color;
+public:
+    const QColor &getColor() const;
+
+private:
     int puissance;
 
     void generatePath(QString qString, QString qString1);

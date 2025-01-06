@@ -122,3 +122,7 @@ bool Car::isWithinFrequencyRange(const Car *otherCar) const {
 void Car::setSpeed(double d) {
     speed=d;
 }
+
+const QColor &Car::getColor() const {
+    return color;
+}

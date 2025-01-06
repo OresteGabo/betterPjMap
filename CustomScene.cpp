@@ -224,15 +224,19 @@ void CustomScene::updateHexagonsWithCars(const QVector<Car*>& cars) {
         maille->setIsCarInside(false);  // Reset the flag for each hexagon
 
         for (const auto& car : cars) {
-            if (maille->isPointInside(car->pos())) { // Check if the car is inside the hexagon
-                maille->setIsCarInside(true);
-                break;  // No need to check other cars once one is inside
+            if(maille->isCarInside(*car)){
+
+                maille->setColor(car->getColor());
+                break;
+            }else{
+                maille->setColor(QColor(0,0,0,0));
+                maille->setBrush(maille->getOriginalBrush());
             }
         }
 
         if(maille->getIsVisible()){
-            if (maille->isCarInside1()) {
-                maille->setBrush(QBrush(Qt::red));  // Example: Highlight with red if a car is inside
+            if (maille->isCarInside()) {
+                maille->setBrush(QBrush(maille->getColor()));  // Example: Highlight with red if a car is inside
             } else {
                 maille->setBrush(maille->getOriginalBrush());  // Reset to the original brush
             }
