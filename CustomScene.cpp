@@ -219,6 +219,7 @@ void CustomScene::toggleMailles() {
     isGridVisible = !isGridVisible; // Toggle the visibility state
     update();
 }
+/*
 void CustomScene::updateHexagonsWithCars(const QVector<Car*>& cars) {
     for (auto& maille : mailles) {
         maille->setIsCarInside(false);  // Reset the flag for each hexagon
@@ -242,8 +243,57 @@ void CustomScene::updateHexagonsWithCars(const QVector<Car*>& cars) {
             }
         }
     }
+}*/
+void CustomScene::updateHexagonsWithCars(const QVector<Car *> &cars) {
+    for (auto& maille : mailles) {
+        maille->setIsCarInside(false);  // Reset the flag for each hexagon
+
+        for (const auto& car : cars) {
+            if(maille->isCarInside(*car)){
+
+                maille->setColor(car->getColor());
+                break;
+            }else{
+                maille->setColor(QColor(0,0,0,0));
+                maille->setBrush(maille->getOriginalBrush());
+            }
+        }
+
+        if(maille->getIsVisible()){
+            if (maille->isCarInside()) {
+                maille->setBrush(QBrush(maille->getColor()));  // Example: Highlight with red if a car is inside
+            } else {
+                maille->setBrush(maille->getOriginalBrush());  // Reset to the original brush
+            }
+        }
+    }
+
+    // Calculate the received power for all cars from mailles
+    updateReceivedPower(cars);
 }
 
+void CustomScene::updateReceivedPower(const QVector<Car *> &cars) {
+    for (const auto &car : cars) {
+        for (const auto &maille : mailles) {
+            double distance = QLineF(car->pos(), maille->polygon().boundingRect().center()).length();
+            if (distance > 0) {
+                // Calculate wavelength (Speed of light / Frequency)
+                double wavelength = 3e8 / car->getFrequency();
+
+                // Calculate received power using the Friis transmission equation
+                double receivedPower = (maille->getTransmittedPower() * maille->getAntennaGain() * car->getAntennaGain() *
+                                        std::pow(wavelength, 2)) /
+                                       (std::pow(4 * M_PI * distance, 2));
+
+                qDebug() << "Received power at car" << car->getId() << "from maille at"
+                         << maille->polygon().boundingRect().center() << ":" << receivedPower << "W";
+
+                // Optional: You could store or process this value further here
+            }
+        }
+    }
+}
+/*
 //Projection lambert93
 // Convert WGS84 (lat, lon) to Lambert 93 (x, y)
 QPointF CustomScene::latLonToLambert93(double lat, double lon) {
@@ -312,7 +362,7 @@ void CustomScene::drawLambert93Grid(double spacing) {
     /*double minLat = boundObj.value("minLat").toDouble();
     double maxLat = boundObj.value("maxLat").toDouble();
     double minLon = boundObj.value("minLon").toDouble();
-    double maxLon = boundObj.value("maxLon").toDouble();*/
+    double maxLon = boundObj.value("maxLon").toDouble();*
 
     double width = sceneRect().width();
     double height = sceneRect().height();
@@ -350,4 +400,8 @@ void CustomScene::drawLambert93Grid(double spacing) {
             addItem(label);
         }
     }
+}
+*/
+const QVector<Maille *> &CustomScene::getMailles() const {
+    return mailles;
 }

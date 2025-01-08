@@ -70,12 +70,12 @@ void CustomGraphicsView::mousePressEvent(QMouseEvent *event) {
 
     //for lambert93
     QPointF scenePoint = mapToScene(event->pos());
-    QPointF lambert93Coords = CustomScene::latLonToLambert93(scenePoint.y(), scenePoint.x());
-    qDebug() << "Lambert 93 Coordinates:" << lambert93Coords;
+    //QPointF lambert93Coords = CustomScene::latLonToLambert93(scenePoint.y(), scenePoint.x());
+    //qDebug() << "Lambert 93 Coordinates:" << lambert93Coords;
 
     // Optionally show in a tooltip
-    QToolTip::showText(event->globalPos(), QString("Lambert 93: (%1, %2)").arg(lambert93Coords.x()).arg(lambert93Coords.y()));
-    QGraphicsView::mousePressEvent(event);
+    //QToolTip::showText(event->globalPos(), QString("Lambert 93: (%1, %2)").arg(lambert93Coords.x()).arg(lambert93Coords.y()));
+    //QGraphicsView::mousePressEvent(event);
 }
 
 void CustomGraphicsView::mouseMoveEvent(QMouseEvent *event) {

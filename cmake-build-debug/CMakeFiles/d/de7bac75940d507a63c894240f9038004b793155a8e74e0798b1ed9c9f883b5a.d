@@ -3,7 +3,6 @@ GraphicsInQt_autogen/timestamp: \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/CMakeCInformation.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/CMakeCXXInformation.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/CMakeCommonLanguageInclude.cmake \
-  /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/CMakeFindDependencyMacro.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/CMakeGenericSystem.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/CMakeInitializeConfigs.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/CMakeLanguageInformation.cmake \
@@ -14,19 +13,12 @@ GraphicsInQt_autogen/timestamp: \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Compiler/GNU-C.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Compiler/GNU-CXX.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Compiler/GNU.cmake \
-  /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/FindCURL.cmake \
-  /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/FindPackageHandleStandardArgs.cmake \
-  /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/FindPackageMessage.cmake \
-  /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/FindPkgConfig.cmake \
-  /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/FindSQLite3.cmake \
-  /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/FindTIFF.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Platform/Linux-GNU-C.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Platform/Linux-GNU-CXX.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Platform/Linux-GNU.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Platform/Linux-Initialize.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Platform/Linux.cmake \
   /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/Platform/UnixPaths.cmake \
-  /home/oreste/.local/share/JetBrains/Toolbox/apps/clion/bin/cmake/linux/x64/share/cmake-3.28/Modules/SelectLibraryConfigurations.cmake \
   /home/oreste/Downloads/GraphicsInQt\ Version\ livrable\ 1/GraphicsInQt\ (3rd\ copy)/CMakeLists.txt \
   /home/oreste/Downloads/GraphicsInQt\ Version\ livrable\ 1/GraphicsInQt\ (3rd\ copy)/Car.cpp \
   /home/oreste/Downloads/GraphicsInQt\ Version\ livrable\ 1/GraphicsInQt\ (3rd\ copy)/Car.h \
@@ -688,10 +680,4 @@ GraphicsInQt_autogen/timestamp: \
   /usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake \
   /usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake \
   /usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake \
-  /usr/local/include/proj.h \
-  /usr/local/lib/cmake/proj/proj-config-version.cmake \
-  /usr/local/lib/cmake/proj/proj-config.cmake \
-  /usr/local/lib/cmake/proj/proj-targets-release.cmake \
-  /usr/local/lib/cmake/proj/proj-targets.cmake \
-  /usr/local/lib/cmake/proj/proj4-targets-release.cmake \
-  /usr/local/lib/cmake/proj/proj4-targets.cmake
+  /usr/local/include/proj.h

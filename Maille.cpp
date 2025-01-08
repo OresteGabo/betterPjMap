@@ -19,6 +19,8 @@ Maille::Maille(const QPointF &center, double size,bool d_isCarInside, QGraphicsI
     //originalBrush = QBrush(QColor(128, 128, 128, 100)); // Light gray fill with some transparency
     //originalBrush=QBrush(color);
     originalPen = QPen(Qt::black, 0.5);                 // Thin black border
+    transmittedPower = QRandomGenerator::global()->bounded(0, 15); // Example: Random between 0W and 15.0W
+    antennaGain = QRandomGenerator::global()->bounded(1, 15);
 
     setBrush(originalBrush);
     setPen(originalPen);
@@ -64,3 +66,21 @@ void Maille::setColor(const QColor &color) {
     Maille::color = color;
     originalBrush=QBrush(color);
 }
+double Maille::getAntennaGain() const {
+    return antennaGain;
+}
+
+void Maille::setAntennaGain(double gain) {
+    antennaGain = gain;
+    qDebug() << "Antenna gain set to:" << gain << "for hexagon at" << polygon().boundingRect().center();
+}
+
+double Maille::getTransmittedPower() const {
+    return transmittedPower;
+}
+
+void Maille::setTransmittedPower(double power) {
+    transmittedPower = power;
+    qDebug() << "Transmitted power set to:" << power << "for hexagon at" << polygon().boundingRect().center();
+}
+

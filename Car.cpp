@@ -16,6 +16,9 @@ Car::Car(const QString &id, const QPointF &initialPosition, double speed,double 
             puissance
     );
 
+    transmittedPower = QRandomGenerator::global()->bounded(0, 5.0); // Example: Random between 0.1W and 5.0W
+    antennaGain = QRandomGenerator::global()->bounded(1, 3.0);
+
 }
 
 double Car::getSpeed() const {
@@ -84,7 +87,7 @@ void Car::updatePosition(qreal elapsedTime) {
         setPos(targetPosition);
         currentPathIndex++;
 
-        if (currentPathIndex >= path.size()) {
+        if (currentPathIndex >= path.size()-1) {
             emit reachedEndOfPath(nodePath.last()); // Emit the last node ID
         }
     } else {
@@ -125,4 +128,17 @@ void Car::setSpeed(double d) {
 
 const QColor &Car::getColor() const {
     return color;
+}
+
+int Car::getPuissance() const {
+    return puissance;
+}
+double Car::getAntennaGain() const {
+    // Example antenna gain (can be dynamic or based on simulation parameters)
+    return antennaGain; // Assuming a default gain of 2
+}
+
+double Car::getTransmittedPower() const {
+    // Example transmitted power (can be dynamic or based on simulation parameters)
+    return transmittedPower; // Assuming 1 Watt of transmitted power
 }

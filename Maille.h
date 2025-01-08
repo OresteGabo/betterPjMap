@@ -28,6 +28,10 @@ private:
     QColor color;
 public:
     void setColor(const QColor &color);
+    double getAntennaGain() const;       // New method: Antenna gain
+    void setAntennaGain(double gain);    // New method: Set antenna gain
+    double getTransmittedPower() const; // New method: Transmitted power
+    void setTransmittedPower(double power); // New method: Set transmitted power
 
 private:
     int alpha;
@@ -35,6 +39,9 @@ private:
     QBrush originalBrush;
     QPen originalPen;
     bool d_isCarInside;
+
+    double antennaGain;      // New attribute: Gain of the antenna
+    double transmittedPower; // New attribute: Transmitted power
 public:
     bool isCarInside() const;
 
@@ -43,6 +50,7 @@ public:
     const QPen &getOriginalPen() const;
 
     const QBrush &getOriginalBrush() const;
+
 
 private:
     QPolygonF hexagon;

@@ -21,6 +21,8 @@ public:
         QGraphicsItem *parent = nullptr);
 
     void updatePosition(qreal elapsedTime, const QVector<Car*> &cars);
+    double getAntennaGain() const; // Get the antenna gain of the car
+    double getTransmittedPower() const; // Get the transmitted power of the car
 
 
     double getSpeed() const;
@@ -34,6 +36,7 @@ public:
     void setPath(const QVector<QPointF> &newPath, const QVector<QString> &newNodeIds);
     bool isWithinFrequencyRange(const Car *otherCar) const;
     void setSpeed(double d);
+
 signals:
     void carClicked(); // Signal emitted when the car is clicked
 
@@ -61,10 +64,16 @@ public:
 
 private:
     int puissance;
+public:
+    int getPuissance() const;
+
+private:
 
     void generatePath(QString qString, QString qString1);
 
     void updateRadius();
+    double transmittedPower;
+    double antennaGain ;
 };
 
 #endif // CAR_H

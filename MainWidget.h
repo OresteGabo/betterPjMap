@@ -33,7 +33,9 @@ public:
     MainWidget(QWidget *parent = nullptr);
     void updateAnimation();
     void onDisplayInfo();
-
+    double calculateWavelength(double frequency);
+    double calculateReceivedPower(double transmittedPower, double antennaGainTx, double antennaGainRx, double wavelength, double distance);
+    void calculateReceivedPower();
 signals:
 signals:
     void carAdded(Car *car);

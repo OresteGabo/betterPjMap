@@ -14,8 +14,7 @@ find_package(Qt5 COMPONENTS
         Widgets
         REQUIRED)
 
-# Find Proj library
-find_package(PROJ REQUIRED)
+
 
 # Add executable and source files
 add_executable(GraphicsInQt
@@ -49,5 +48,5 @@ target_link_libraries(GraphicsInQt
         Qt5::Gui
         Qt5::Widgets
         Qt5::Sql
-        PROJ::proj
+
 )

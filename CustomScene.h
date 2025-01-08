@@ -30,9 +30,10 @@ public:
     void updatePolygonColorsBasedOnCarPositions();
     void initializeMailles();
     void updateHexagonCoverage(const QVector<QPointF>& vehiclePositions);
-    static QPointF latLonToLambert93(double lat, double lon);
-    static QPointF lambert93ToLatLon(double x, double y);
-    void drawLambert93Grid(double spacing);
+    //static QPointF latLonToLambert93(double lat, double lon);
+    //static QPointF lambert93ToLatLon(double x, double y);
+    //void drawLambert93Grid(double spacing);
+    void updateReceivedPower(const QVector<Car *> &cars);
 
     void updateHexagonsWithCars(const QVector<Car*>& cars);
 signals:
@@ -61,6 +62,10 @@ private:
 
     void clearHexGrid();
     QVector<Maille*> mailles;
+public:
+    const QVector<Maille *> &getMailles() const;
+
+private:
     QVector<QGraphicsPolygonItem *> polygons; // Store the polygon items
 
 };
