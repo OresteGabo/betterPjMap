@@ -1,0 +1,48 @@
+# CMake build directories
+build/
+Build/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Qt6 generated files
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.autogen/
+
+# C++ compiled files
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.app
+
+# IDE-specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.user
+
+# macOS-specific files
+.DS_Store
+
+# SQLite database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.backup
