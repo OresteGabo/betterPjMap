@@ -15,7 +15,7 @@ class Car :public QObject, public QGraphicsEllipseItem {
 
 public:
     Car(const QString &id, const QPointF &initialPosition,
-        double speed=QRandomGenerator::global()->bounded(10, 40.0),
+        double speed=QRandomGenerator::global()->bounded(10, 40),
         double frequency=QRandomGenerator::global()->bounded(10, 100),
         int puissance=QRandomGenerator::global()->bounded(0, 255),
         QGraphicsItem *parent = nullptr);

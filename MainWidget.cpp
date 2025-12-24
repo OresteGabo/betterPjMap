@@ -210,20 +210,35 @@ void MainWidget::onAddCars() {
             QString startNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
             QString endNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
 
-            if (startNode == endNode) {
-                continue; // Avoid same start and end
-            }
+            if (startNode == endNode) continue;
 
             QVector<QString> nodePath = DatabaseManager::findPath(startNode, endNode, adjacencyList);
 
-            if (!nodePath.isEmpty() || nodePath.size()>400) {
+            // FIX: Ensure we have coordinates for all nodes in our nodeMap
+            if (!nodePath.isEmpty()) {
                 QVector<QPointF> path;
+                bool missingCoords = false;
+
                 for (const QString &nodeId : nodePath) {
-                    path.append(DatabaseManager::getPositionByNodeId(nodeId));
+                    if (nodeMap.contains(nodeId)) {
+                        path.append(nodeMap[nodeId]); // Use the converted pixels!
+                    } else {
+                        missingCoords = true;
+                        break;
+                    }
+                }
+
+                if (missingCoords || path.isEmpty()) {
+                    qDebug() << "Path contained nodes not present in the scene, retrying...";
+                    continue;
                 }
 
                 QPointF initialPosition = path.first();
                 auto car = new Car(QString::number(cars.size() + 1), initialPosition);
+
+                // CRITICAL: You must tell the QGraphicsItem where it is in the scene
+                car->setPos(initialPosition);
+
                 car->setPath(path, nodePath);
 
                 connect(car, &Car::reachedEndOfPath, this, [=](const QString &lastNodeId) {
@@ -233,20 +248,12 @@ void MainWidget::onAddCars() {
                 cars.append(car);
                 scene->addItem(car);
 
-                qDebug() << "Car" << car->getId() << "added with path from" << startNode << "to" << endNode;
-
-                // Update the scene immediately after adding the car
-                scene->update();          // Redraw the scene
-                QApplication::processEvents();
-                break; // Path successfully assigned
+                break;
             }
-
-            qDebug() << "No path found between" << startNode << "and" << endNode << ", retrying...";
         }
     }
-
-    onDisplayInfo(); // Update debug text area
-    graphicsView->scene()->update(); // Refresh the scene
+    onDisplayInfo();
+    scene->update();
 }
 
 

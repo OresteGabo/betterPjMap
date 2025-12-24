@@ -12,7 +12,7 @@
 #include <QVector>
 #include <QTimer>
 #include <QJsonObject>
-#include <proj.h>
+
 #include "Car.h"
 
 class CustomScene : public QGraphicsScene {

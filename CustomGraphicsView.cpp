@@ -36,8 +36,11 @@ void CustomGraphicsView::showEvent(QShowEvent *event) {
     fitInView(scene()->sceneRect(), Qt::KeepAspectRatio);
 }
 void CustomGraphicsView::wheelEvent(QWheelEvent *event) {
+    // In Qt 6, use position() instead of pos()
+    QPointF mousePos = event->position();
+
     // Get the current mouse position in scene coordinates
-    QPointF mouseScenePos = mapToScene(event->pos());
+    QPointF mouseScenePos = mapToScene(mousePos.toPoint());
 
     // Determine zoom factor
     double scaleFactor = (event->angleDelta().y() > 0) ? 1.1 : 0.9;
@@ -46,7 +49,7 @@ void CustomGraphicsView::wheelEvent(QWheelEvent *event) {
     scale(scaleFactor, scaleFactor);
 
     // Calculate new mouse position in scene coordinates after scaling
-    QPointF newMouseScenePos = mapToScene(event->pos());
+    QPointF newMouseScenePos = mapToScene(mousePos.toPoint());
 
     // Compute the difference (offset) between the old and new positions
     QPointF offset = newMouseScenePos - mouseScenePos;
@@ -54,7 +57,6 @@ void CustomGraphicsView::wheelEvent(QWheelEvent *event) {
     // Translate the view to keep the mouse position consistent
     translate(offset.x(), offset.y());
 
-    // Accept the event
     event->accept();
 }
 
@@ -70,12 +72,6 @@ void CustomGraphicsView::mousePressEvent(QMouseEvent *event) {
 
     //for lambert93
     QPointF scenePoint = mapToScene(event->pos());
-    //QPointF lambert93Coords = CustomScene::latLonToLambert93(scenePoint.y(), scenePoint.x());
-    //qDebug() << "Lambert 93 Coordinates:" << lambert93Coords;
-
-    // Optionally show in a tooltip
-    //QToolTip::showText(event->globalPos(), QString("Lambert 93: (%1, %2)").arg(lambert93Coords.x()).arg(lambert93Coords.y()));
-    //QGraphicsView::mousePressEvent(event);
 }
 
 void CustomGraphicsView::mouseMoveEvent(QMouseEvent *event) {

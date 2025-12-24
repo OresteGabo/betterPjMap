@@ -5,6 +5,9 @@
 //
 
 #include "Maille.h"
+
+#include <QRandomGenerator>
+
 Maille::Maille(const QPointF &center, double size,bool d_isCarInside, QGraphicsItem *parent)
         : QGraphicsPolygonItem(parent), isVisible(true) ,d_isCarInside(d_isCarInside) ,color(QColor(0, 0, 128, 100)){
     // Create the hexagonal shape

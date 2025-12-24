@@ -16,8 +16,8 @@ Car::Car(const QString &id, const QPointF &initialPosition, double speed,double 
             puissance
     );
 
-    transmittedPower = QRandomGenerator::global()->bounded(0, 5.0); // Example: Random between 0.1W and 5.0W
-    antennaGain = QRandomGenerator::global()->bounded(1, 3.0);
+    transmittedPower = QRandomGenerator::global()->bounded(0, 5); // Example: Random between 0.1W and 5.0W
+    antennaGain = QRandomGenerator::global()->bounded(1, 3);
 
 }
 

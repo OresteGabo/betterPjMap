@@ -7,7 +7,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 # Find Qt5 Components
-find_package(Qt5 COMPONENTS
+find_package(Qt6 COMPONENTS
         Core
         Sql
         Gui
@@ -44,9 +44,9 @@ include_directories(${CMAKE_SOURCE_DIR})
 
 # Link libraries
 target_link_libraries(GraphicsInQt
-        Qt5::Core
-        Qt5::Gui
-        Qt5::Widgets
-        Qt5::Sql
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
+        Qt6::Sql
 
 )
