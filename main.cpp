@@ -15,6 +15,8 @@ using namespace std;
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
 
+    // TODO(01): Move database configuration out of source code and into
+    // config/environment variables before sharing or deploying the app.
     // Initialize database manager
     DatabaseManager dbMngr("OSMData", "oreste", "Muhirehonore@1*", "map.osm");
 
