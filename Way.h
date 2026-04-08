@@ -13,6 +13,8 @@
 
 class Way : public QGraphicsItem {
 public:
+    // TODO(27): Either finish this class and integrate it into rendering,
+    // or remove it if the scene will keep drawing raw paths instead.
     Way(const QString &id, const QVector<QString> &nodeRefs, const QMap<QString, QString> &tags)
             : wayId(id), nodeRefs(nodeRefs), tags(tags) {}
 
