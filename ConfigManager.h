@@ -14,6 +14,8 @@ class ConfigManager {
 
 public:
     ConfigManager(const QString &configFileName = "config.json") : configFileName(configFileName) {
+        // TODO(04): Avoid writing screen size automatically in the
+        // constructor. Loading config and mutating config should be separate steps.
         QFile file(configFileName);
         // If the file doesn't exist, create it
         if (!file.exists()) {
@@ -88,6 +90,8 @@ public:
 
 private:
     void writeToFile() {
+        // TODO(02): Write back to configFileName instead of hardcoding
+        // "config.json" so alternate config paths work correctly.
         QFile file("config.json");
         if (!file.open(QIODevice::WriteOnly)) {
             qDebug() << "Could not open config file for writing";
