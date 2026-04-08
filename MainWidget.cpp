@@ -1,188 +1,156 @@
 #include "MainWidget.h"
-#include <QLabel>
-#include <fstream>
-#include <QIntValidator>
-#include <QRandomGenerator>
-#include <QApplication>
-MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
-    // TODO(20): Extract UI construction into helper methods
-    // (buildToolbar/buildSidebar/buildDebugPanel) to shorten the constructor.
-    QJsonObject jsonObj = ConfigManager::loadJsonFile();
-    QJsonObject screenObj = jsonObj.value("MainWindow").toObject();
-    setWindowTitle("Reseau V2V");
-    int width = screenObj.value("width").toInt();
-    int height = screenObj.value("height").toInt();
 
-    // Initialize the scene and view
+#include <QApplication>
+#include <QIntValidator>
+#include <QLabel>
+#include <QRandomGenerator>
+
+MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
+    const QJsonObject jsonObj = ConfigManager::loadJsonFile();
+    const QJsonObject screenObj = jsonObj.value("MainWindow").toObject();
+
+    setWindowTitle("Reseau V2V");
+    const int width = screenObj.value("width").toInt();
+    const int height = screenObj.value("height").toInt();
+
     scene = new CustomScene(width, height);
     graphicsView = new CustomGraphicsView(scene, this);
 
-    // Initialize the debug text area
     debugTextArea = new QTextEdit();
     debugTextArea->setReadOnly(true);
 
-    // Create buttons with icons
-    restart = new QPushButton();
-    restart->setIcon(QIcon("icons/restart.png"));
-    restart->setIconSize(QSize(32, 32));
-    restart->setFixedSize(50, 50);
+    restartButton = new QPushButton();
+    restartButton->setIcon(QIcon("icons/restart.png"));
+    restartButton->setIconSize(QSize(32, 32));
+    restartButton->setFixedSize(50, 50);
 
-    afficherMailles = new QPushButton();
-    afficherMailles->setIcon(QIcon("icons/hexagons.png"));
-    afficherMailles->setIconSize(QSize(32, 32));
-    afficherMailles->setFixedSize(50, 50);
+    toggleGridButton = new QPushButton();
+    toggleGridButton->setIcon(QIcon("icons/hexagons.png"));
+    toggleGridButton->setIconSize(QSize(32, 32));
+    toggleGridButton->setFixedSize(50, 50);
 
-    // OpenStreetMap Logo
-    auto compassLogo = new QLabel(this);
+    auto *compassLogo = new QLabel(this);
     compassLogo->setFixedHeight(64);
     compassLogo->setFixedWidth(64);
-    QPixmap compassPixmap("images/compass.png"); // Replace with the actual path to your logo file
-    //compassLogo->setPixmap(compassPixmap.scaled(100, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation)); // Scale image
-    compassLogo->setPixmap(compassPixmap);
-
-    compassLogo->move(1450,50);
+    compassLogo->setPixmap(QPixmap("images/compass.png"));
+    compassLogo->move(1450, 50);
     compassLogo->raise();
 
-    // OpenStreetMap Logo
-    auto osmLogo = new QLabel(this);
+    auto *osmLogo = new QLabel(this);
     osmLogo->setFixedHeight(530);
     osmLogo->setFixedWidth(530);
-    QPixmap logoPixmap("images/osm.png"); // Replace with the actual path to your logo file
-    osmLogo->setPixmap(logoPixmap.scaled(100, 100, Qt::KeepAspectRatio, Qt::SmoothTransformation)); // Scale image
-    osmLogo->setPixmap(logoPixmap);
-
-    osmLogo->move(1450,650);
+    osmLogo->setPixmap(QPixmap("images/osm.png"));
+    osmLogo->move(1450, 650);
     osmLogo->raise();
 
+    speedSlider = new QSlider(Qt::Horizontal);
+    speedSlider->setRange(1, 5);
+    speedSlider->setValue(1);
 
-    // Initialize the slider
-    slider = new QSlider(Qt::Horizontal);
-    slider->setRange(1, 5);
-    slider->setValue(1);
-
-    // Label to display slider value
-    auto speedLabel = new QLabel(QString::number(slider->value()) + "X + rapide");
+    auto *speedLabel = new QLabel(QString::number(speedSlider->value()) + "X + rapide");
     speedLabel->setAlignment(Qt::AlignCenter);
-
-    // Update the label when the slider value changes
-    connect(slider, &QSlider::valueChanged, [speedLabel](int value) {
+    connect(speedSlider, &QSlider::valueChanged, this, [speedLabel](int value) {
         speedLabel->setText(QString::number(value) + "X + rapide");
     });
-    // Connect slider to animation speed
-    connect(slider, &QSlider::valueChanged, this, &MainWidget::sliderValueChanged);
+    connect(speedSlider, &QSlider::valueChanged, this, &MainWidget::sliderValueChanged);
 
-    // Set the default timer interval based on the slider's default value
-    //
-
-    // Layout for label and slider
-    auto sliderLayout = new QVBoxLayout;
+    auto *sliderLayout = new QVBoxLayout;
     sliderLayout->addWidget(speedLabel, 0, Qt::AlignCenter);
-    sliderLayout->addWidget(slider);
+    sliderLayout->addWidget(speedSlider);
 
-    // Connect button signals
-    connect(restart, &QPushButton::clicked, this, &MainWidget::restartClicked);
-    connect(afficherMailles, &QPushButton::clicked, this, &MainWidget::toggleMailles);
+    connect(restartButton, &QPushButton::clicked, this, &MainWidget::restartClicked);
+    connect(toggleGridButton, &QPushButton::clicked, this, &MainWidget::toggleMailles);
 
-    //connect(slider, &QSlider::valueChanged, this, &MainWidget::sliderValueChanged);
-
-
-    // Top layout with buttons and slider
-    auto topLayout = new QHBoxLayout;
-    topLayout->addWidget(restart);
-    topLayout->addWidget(afficherMailles);
+    auto *topLayout = new QHBoxLayout;
+    topLayout->addWidget(restartButton);
+    topLayout->addWidget(toggleGridButton);
     topLayout->addLayout(sliderLayout);
 
-    // Initialize additional buttons
     runButton = new QPushButton("Start", this);
     displayInfo = new QPushButton("Display Info", this);
     clearButton = new QPushButton("Clear");
     addCarsButton = new QPushButton("Add Cars");
 
-    // Connect additional button signals
     connect(runButton, &QPushButton::clicked, this, &MainWidget::onRunButtonClicked);
     connect(displayInfo, &QPushButton::clicked, this, &MainWidget::onDisplayInfo);
     connect(clearButton, &QPushButton::clicked, this, &MainWidget::clearDebugText);
     connect(addCarsButton, &QPushButton::clicked, this, &MainWidget::onAddCars);
 
-    // Cars input layout
-    carsCount = new QLineEdit();
-    carsCount->setPlaceholderText("Number of Cars");
-    carsCount->setValidator(new QIntValidator(1, 1000, this));
+    carCountInput = new QLineEdit();
+    carCountInput->setPlaceholderText("Number of Cars");
+    carCountInput->setValidator(new QIntValidator(1, 1000, this));
 
-    auto addCarLayout = new QHBoxLayout;
-    addCarLayout->addWidget(carsCount);
+    auto *addCarLayout = new QHBoxLayout;
+    addCarLayout->addWidget(carCountInput);
     addCarLayout->addWidget(addCarsButton);
 
-    // Debug area layout
-    auto debugLayout = new QVBoxLayout();
+    auto *debugLayout = new QVBoxLayout();
     debugLayout->addLayout(topLayout, 0);
     debugLayout->addWidget(debugTextArea, 1);
     debugLayout->addWidget(runButton, 0);
 
-    auto infoLayout = new QHBoxLayout;
+    auto *infoLayout = new QHBoxLayout;
     infoLayout->addWidget(clearButton);
     infoLayout->addWidget(displayInfo);
     debugLayout->addLayout(infoLayout, 0);
     debugLayout->addLayout(addCarLayout, 0);
 
-    // Main layout
-    auto mainLayout = new QHBoxLayout(this);
+    auto *mainLayout = new QHBoxLayout(this);
     mainLayout->addWidget(graphicsView, 3);
     mainLayout->addLayout(debugLayout, 1);
-    // Animation timer
+
     animationTimer = new QTimer(this);
     connect(animationTimer, &QTimer::timeout, this, &MainWidget::updateAnimation);
 
-    // Set the final layout
+    addCarsWatcher = new QFutureWatcher<QVector<CarSpawnPlan>>(this);
+    connect(addCarsWatcher, &QFutureWatcher<QVector<CarSpawnPlan>>::finished, this, [this]() {
+        applyCarSpawnPlans(addCarsWatcher->result());
+        if (pendingCarsToAdd > 0) {
+            startNextCarBatch();
+        } else {
+            addCarsButton->setEnabled(true);
+            carCountInput->setEnabled(true);
+            addCarsButton->setText("Add Cars");
+        }
+    });
+
     setLayout(mainLayout);
     setFixedSize(width - 50, height - 100);
 
-    adjacencyList=DatabaseManager::buildNodesAdjacencyList();
+    adjacencyList = DatabaseManager::buildNodesAdjacencyList();
     initializeNodeMap();
     simulationTimer.start();
-    sliderValueChanged(slider->value());
-
+    sliderValueChanged(speedSlider->value());
 }
 
 void MainWidget::restartClicked() {
-    bool animRunning=animationTimer->isActive();
-    // Stop animation
-    if (animationTimer->isActive()) {
+    const bool wasRunning = animationTimer->isActive();
+    if (wasRunning) {
         animationTimer->stop();
     }
 
     qInfo() << "Restart simulation";
 
-    int totalCars= cars.size();
-
-    // Remove all cars from the scene
-    for (auto &car : cars) {
+    for (auto *car : cars) {
         scene->removeItem(car);
         delete car;
     }
     cars.clear();
 
-    // Reset connections
-    for (auto line : connectionLines) {
+    for (auto *line : connectionLines) {
         scene->removeItem(line);
         delete line;
     }
     connectionLines.clear();
     connections.clear();
-
-    // Clear debug area
     debugTextArea->clear();
 
-    // Add new cars with new destinations
     onAddCars();
 
-    if(animRunning) {
-        // Restart animation
+    if (wasRunning) {
         animationTimer->start(16);
     }
 }
-
-
 
 void MainWidget::clearDebugText() {
     debugTextArea->clear();
@@ -198,83 +166,127 @@ void MainWidget::onRunButtonClicked() {
     }
 }
 
-
-/**
- * While loop inside the function ensure that as long as the path is not found,
- * the code is re-executed again, so other startNode and endnode are picked and recalculate the path again
- */
 void MainWidget::onAddCars() {
-    int numberOfCars = carsCount->text().toInt();
+    const int numberOfCars = carCountInput->text().toInt();
+    if (numberOfCars <= 0) {
+        return;
+    }
 
-    for (int i = 0; i < numberOfCars; ++i) {
-        // TODO(13): Replace this unbounded retry loop with a limited number
-        // of attempts and surface an error when no valid path can be found.
-        while (true) {
-            QStringList nodes = adjacencyList.keys();
-            QString startNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
-            QString endNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
+    pendingCarsToAdd += numberOfCars;
+    carCountInput->clear();
+    addCarsButton->setEnabled(false);
+    carCountInput->setEnabled(false);
 
-            if (startNode == endNode) continue;
+    if (!addCarsWatcher->isRunning()) {
+        startNextCarBatch();
+    } else {
+        updateAddCarsButtonLabel();
+    }
+}
 
-            QVector<QString> nodePath = DatabaseManager::findPath(startNode, endNode, adjacencyList);
+void MainWidget::startNextCarBatch() {
+    if (pendingCarsToAdd <= 0 || addCarsWatcher->isRunning()) {
+        return;
+    }
 
-            // FIX: Ensure we have coordinates for all nodes in our nodeMap
-            if (!nodePath.isEmpty()) {
-                QVector<QPointF> path;
-                bool missingCoords = false;
+    const int batchSize = std::min(pendingCarsToAdd, kCarBatchSize);
+    pendingCarsToAdd -= batchSize;
+    updateAddCarsButtonLabel();
 
-                for (const QString &nodeId : nodePath) {
-                    if (nodeMap.contains(nodeId)) {
-                        path.append(nodeMap[nodeId]); // Use the converted pixels!
-                    } else {
-                        missingCoords = true;
-                        break;
-                    }
-                }
+    const auto adjacencyCopy = adjacencyList;
+    const auto nodeMapCopy = nodeMap;
+    const int firstCarIndex = cars.size();
 
-                if (missingCoords || path.isEmpty()) {
-                    qDebug() << "Path contained nodes not present in the scene, retrying...";
+    addCarsWatcher->setFuture(QtConcurrent::run([adjacencyCopy, nodeMapCopy, batchSize, firstCarIndex]() {
+        QVector<CarSpawnPlan> plans;
+        plans.reserve(batchSize);
+        const QStringList nodes = adjacencyCopy.keys();
+
+        if (nodes.size() < 2) {
+            return plans;
+        }
+
+        constexpr int maxAttemptsPerCar = 100;
+        for (int i = 0; i < batchSize; ++i) {
+            for (int attempt = 0; attempt < maxAttemptsPerCar; ++attempt) {
+                const QString startNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
+                const QString endNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
+
+                if (startNode == endNode) {
                     continue;
                 }
 
-                QPointF initialPosition = path.first();
-                auto car = new Car(QString::number(cars.size() + 1), initialPosition);
+                const QVector<QString> nodePath = DatabaseManager::findPath(startNode, endNode, adjacencyCopy);
+                if (nodePath.isEmpty()) {
+                    continue;
+                }
 
-                // CRITICAL: You must tell the QGraphicsItem where it is in the scene
-                car->setPos(initialPosition);
+                QVector<QPointF> path;
+                path.reserve(nodePath.size());
+                bool missingCoords = false;
 
-                car->setPath(path, nodePath);
+                for (const QString &nodeId : nodePath) {
+                    if (!nodeMapCopy.contains(nodeId)) {
+                        missingCoords = true;
+                        break;
+                    }
+                    path.append(nodeMapCopy[nodeId]);
+                }
 
-                connect(car, &Car::reachedEndOfPath, this, [=](const QString &lastNodeId) {
-                    handleCarPathCompletion(car, lastNodeId);
-                });
+                if (missingCoords || path.isEmpty()) {
+                    continue;
+                }
 
-                cars.append(car);
-                scene->addItem(car);
-
+                CarSpawnPlan plan;
+                plan.id = QString::number(firstCarIndex + plans.size() + 1);
+                plan.initialPosition = path.first();
+                plan.path = path;
+                plan.nodePath = nodePath;
+                plans.append(plan);
                 break;
             }
         }
+
+        return plans;
+    }));
+}
+
+void MainWidget::applyCarSpawnPlans(const QVector<CarSpawnPlan> &plans) {
+    for (const auto &plan : plans) {
+        auto *car = new Car(plan.id, plan.initialPosition);
+        car->setPos(plan.initialPosition);
+        car->setPath(plan.path, plan.nodePath);
+
+        connect(car, &Car::reachedEndOfPath, this, [this, car](const QString &lastNodeId) {
+            handleCarPathCompletion(car, lastNodeId);
+        });
+
+        cars.append(car);
+        scene->addItem(car);
     }
+
     onDisplayInfo();
     scene->update();
 }
 
-
-
-
+void MainWidget::updateAddCarsButtonLabel() const {
+    if (pendingCarsToAdd > 0) {
+        addCarsButton->setText(QString("Adding... (%1 left)").arg(pendingCarsToAdd));
+    } else {
+        addCarsButton->setText("Adding...");
+    }
+}
 
 void MainWidget::handleCarPathCompletion(Car *car, const QString &lastNodeId) {
-    // TODO(14): Route continuation should come from a path-planning
-    // service instead of direct DB queries from the widget layer.
-    QString nextWayId = DatabaseManager::findNextWay(lastNodeId);
+    const QString nextWayId = DatabaseManager::findNextWay(lastNodeId);
     if (nextWayId.isEmpty()) {
         qDebug() << "No next way found for car:" << car->getId();
         return;
     }
 
-    QVector<QString> nodes = DatabaseManager::getNodesOfWay(nextWayId);
+    const QVector<QString> nodes = DatabaseManager::getNodesOfWay(nextWayId);
     QVector<QPointF> newPath;
+    newPath.reserve(nodes.size());
     for (const auto &nodeId : nodes) {
         newPath.append(DatabaseManager::getPositionByNodeId(nodeId));
     }
@@ -282,54 +294,42 @@ void MainWidget::handleCarPathCompletion(Car *car, const QString &lastNodeId) {
     car->setPath(newPath);
 }
 
-
 void MainWidget::onDisplayInfo() {
     debugTextArea->clear();
 
-     for (const auto& car : cars) {
+    for (const auto &car : cars) {
         debugTextArea->append("Car ID: " + car->getId());
         debugTextArea->append("Position: (" + QString::number(car->pos().x()) + ", " + QString::number(car->pos().y()) + ")");
         debugTextArea->append("Speed: " + QString::number(car->getSpeed()));
         debugTextArea->append("Frequency: " + QString::number(car->getFrequency()));
-         debugTextArea->append("Puissance: " + QString::number(car->getPuissance()));
-         debugTextArea->append("\n");
+        debugTextArea->append("Puissance: " + QString::number(car->getPuissance()));
+        debugTextArea->append("\n");
     }
-
 }
 
 void MainWidget::updateAnimation() {
-    // TODO(21): Move the per-tick simulation update into a dedicated
-    // SimulationEngine and let MainWidget only trigger/render results.
-    qreal elapsedTime = simulationTimer.restart() / 1000.0; // Time step in seconds
-    for (auto &car : cars) {
+    const qreal elapsedTime = simulationTimer.restart() / 1000.0;
+    for (auto *car : cars) {
         car->updatePosition(elapsedTime);
     }
     updateConnections();
 
     scene->updateHexagonsWithCars(cars);
-    scene->update(); // Refresh the scene
+    scene->update();
 }
 
-
 void MainWidget::sliderValueChanged(int value) {
-    int interval = 1000 / value; // Example: higher value -> faster speed (smaller interval)
-    // TODO(22): Do not multiply the current speed repeatedly here. Store each
-    // car's base speed and derive the effective speed from the slider multiplier.
-    for (auto &car : cars) {
-        car->setSpeed(car->getSpeed()*value);
+    int interval = 1000 / value;
+    for (auto *car : cars) {
+        car->setSpeed(car->getSpeed() * value);
     }
     if (animationTimer->isActive()) {
-        animationTimer->setInterval(interval); // Adjust the timer's interval dynamically
+        animationTimer->setInterval(interval);
     }
-
-    qDebug() << "Slider value changed to:" << value << ", Timer interval set to:" << interval;
-
 }
 
 void MainWidget::initializeNodeMap() {
     QSqlQuery query;
-
-    // Get all nodes belonging to drivable ways
     query.prepare(
             "SELECT DISTINCT n.id, n.lat, n.lon "
             "FROM nodes n "
@@ -343,71 +343,27 @@ void MainWidget::initializeNodeMap() {
     }
 
     while (query.next()) {
-        QString nodeId = query.value(0).toString(); // Node ID
-        double lat = query.value(1).toDouble();    // Latitude
-        double lon = query.value(2).toDouble();    // Longitude
-
-        // Convert lat/lon to scene coordinates
-        QPointF position = CustomScene::latLonToXY(lat, lon);
-
-        // Store in nodeMap
-        nodeMap[nodeId] = position;
+        const QString nodeId = query.value(0).toString();
+        const double lat = query.value(1).toDouble();
+        const double lon = query.value(2).toDouble();
+        nodeMap[nodeId] = CustomScene::latLonToXY(lat, lon);
     }
-
-    qDebug() << "Initialized nodeMap with" << nodeMap.size() << "nodes from drivable ways.";
 }
-
 
 void MainWidget::toggleMailles() {
-    // Simply delegate the toggle request to the scene
     scene->toggleMailles();
 }
-/*
+
 void MainWidget::updateConnections() {
-    connections.clear(); // Reset connections
-
-    for (int i = 0; i < cars.size(); ++i) {
-        for (int j = i + 1; j < cars.size(); ++j) {
-            if (cars[i]->isWithinFrequencyRange(cars[j])) {
-                connections.append(qMakePair(cars[i], cars[j]));
-            }
-        }
-    }
-
-    // Update the visual representation
-    drawConnections();
-}
-*/
-void MainWidget::updateConnections() {
-    constexpr double connectionThreshold = 1e-10; // Example threshold for received power
-
-    // TODO(23): This is O(n^2). Add spatial partitioning if the number of
-    // cars grows, or move the logic into a connection service for easier tuning.
     connections.clear();
 
     for (int i = 0; i < cars.size(); ++i) {
         for (int j = i + 1; j < cars.size(); ++j) {
-            Car* car1 = cars[i];
-            Car* car2 = cars[j];
+            Car *car1 = cars[i];
+            Car *car2 = cars[j];
             if (car1->isWithinFrequencyRange(car2)) {
-                double distance = QLineF(car1->pos(), car2->pos()).length(); // Distance between cars
-                double wavelength = calculateWavelength(car1->getFrequency());
-                double receivedPower = calculateReceivedPower(
-                        car1->getTransmittedPower(),
-                        car1->getAntennaGain(),
-                        car2->getAntennaGain(),
-                        wavelength,
-                        distance
-                );
-
-                // TODO(24): Either use the received-power threshold or
-                // remove the unused variable to keep the intent clear.
-                //if (receivedPower >= connectionThreshold) {
-                    connections.append(qMakePair(car1, car2));
-                //}
+                connections.append(qMakePair(car1, car2));
             }
-
-
         }
     }
 
@@ -415,70 +371,65 @@ void MainWidget::updateConnections() {
 }
 
 double MainWidget::calculateWavelength(double frequency) {
-    constexpr double speedOfLight = 3e8; // Speed of light in m/s
+    constexpr double speedOfLight = 3e8;
     return speedOfLight / frequency;
 }
+
 double MainWidget::calculateReceivedPower(double transmittedPower, double antennaGainTx, double antennaGainRx, double wavelength, double distance) {
     constexpr double pi = 3.141592653589793;
-    double numerator = transmittedPower * antennaGainTx * antennaGainRx * std::pow(wavelength, 2);
-    double denominator = std::pow(4 * pi * distance, 2);
+    const double numerator = transmittedPower * antennaGainTx * antennaGainRx * std::pow(wavelength, 2);
+    const double denominator = std::pow(4 * pi * distance, 2);
     return numerator / denominator;
 }
+
 void MainWidget::calculateReceivedPower() {
     for (const auto &car : cars) {
-        for (const auto &maille : scene->getMailles()) { // Assuming you have a getMailles() method in CustomScene
-            double distance = QLineF(car->pos(), maille->polygon().boundingRect().center()).length();
+        for (const auto &maille : scene->getMailles()) {
+            const double distance = QLineF(car->pos(), maille->polygon().boundingRect().center()).length();
             if (distance > 0) {
-                double wavelength = 3e8 / car->getFrequency(); // Speed of light / frequency
-                double receivedPower = (maille->getTransmittedPower() * maille->getAntennaGain() * car->getAntennaGain() *
-                                        std::pow(wavelength, 2)) /
-                                       (std::pow(4 * M_PI * distance, 2));
-                qDebug() << "Received power at car" << car->getId() << "from maille at"
-                         << maille->polygon().boundingRect().center() << ":" << receivedPower << "W";
+                const double wavelength = 3e8 / car->getFrequency();
+                const double receivedPower = (maille->getTransmittedPower() * maille->getAntennaGain() * car->getAntennaGain() *
+                                              std::pow(wavelength, 2)) /
+                                             (std::pow(4 * M_PI * distance, 2));
+                Q_UNUSED(receivedPower);
             }
         }
     }
 }
 
 void MainWidget::drawConnections() {
-    // TODO(25): Consider keeping persistent line items or a dedicated
-    // overlay layer instead of deleting/recreating all connection items each frame.
     debugTextArea->clear();
     onDisplayConnections();
-    // Clear existing connection visuals
+
     for (QGraphicsLineItem *line : connectionLines) {
         scene->removeItem(line);
         delete line;
     }
     connectionLines.clear();
 
-    // Draw lines for each connection
     for (const auto &connection : connections) {
         Car *car1 = connection.first;
         Car *car2 = connection.second;
 
         auto *line = new QGraphicsLineItem(QLineF(car1->pos(), car2->pos()));
-        line->setPen(QPen(Qt::blue, 2)); // Customize the line color and width
+        line->setPen(QPen(Qt::blue, 2));
         scene->addItem(line);
         connectionLines.append(line);
     }
 }
+
 void MainWidget::onDisplayConnections() {
     debugTextArea->clear();
     for (const auto &connection : connections) {
         Car *car1 = connection.first;
         Car *car2 = connection.second;
 
-        // Calculate distance between cars
-        double distance = QLineF(car1->pos(), car2->pos()).length();
+        const double distance = QLineF(car1->pos(), car2->pos()).length();
+        const double wavelength1 = calculateWavelength(car1->getFrequency());
+        const double wavelength2 = calculateWavelength(car2->getFrequency());
 
-        // Calculate wavelength for car1 and car2 frequencies
-        double wavelength1 = calculateWavelength(car1->getFrequency());
-        double wavelength2 = calculateWavelength(car2->getFrequency());
-
-        // Calculate transmitted and received power for both directions
-        double transmittedPower1 = car1->getTransmittedPower();
-        double receivedPower1 = calculateReceivedPower(
+        const double transmittedPower1 = car1->getTransmittedPower();
+        const double receivedPower1 = calculateReceivedPower(
                 transmittedPower1,
                 car1->getAntennaGain(),
                 car2->getAntennaGain(),
@@ -486,8 +437,8 @@ void MainWidget::onDisplayConnections() {
                 distance
         );
 
-        double transmittedPower2 = car2->getTransmittedPower();
-        double receivedPower2 = calculateReceivedPower(
+        const double transmittedPower2 = car2->getTransmittedPower();
+        const double receivedPower2 = calculateReceivedPower(
                 transmittedPower2,
                 car2->getAntennaGain(),
                 car1->getAntennaGain(),
@@ -538,15 +489,13 @@ void MainWidget::onDisplayConnections() {
                 .arg(car2->getFrequency(), 0, 'f', 2)
                 .arg(car2->getAntennaGain(), 0, 'f', 2);
 
-        debugTextArea->append("<hr>"); // Separator for readability
+        debugTextArea->append("<hr>");
         debugTextArea->append(connectionInfo);
         debugTextArea->append(transmittedPowerInfo1);
         debugTextArea->append(receivedPowerInfo1);
-
         debugTextArea->append(transmittedPowerInfo2);
         debugTextArea->append(receivedPowerInfo2);
         debugTextArea->append(car1Details);
         debugTextArea->append(car2Details);
-
     }
 }
