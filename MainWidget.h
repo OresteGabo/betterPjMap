@@ -30,6 +30,8 @@ class MainWidget : public QWidget {
 Q_OBJECT
 
 public:
+    // TODO(19): Keep MainWidget as a thin UI/controller class. Move car
+    // spawning, stepping, connectivity, and debug formatting into dedicated services.
     MainWidget(QWidget *parent = nullptr);
     void updateAnimation();
     void onDisplayInfo();
