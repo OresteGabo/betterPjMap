@@ -18,6 +18,10 @@
 using AdjacencyList = QMap<QString, QVector<QString>>;
 class DatabaseManager {
 public:
+    // TODO(15): Split this class into smaller units:
+    // - importer for .osm parsing
+    // - repository for SQL reads/writes
+    // - path/graph service for adjacency and routing logic
 
     DatabaseManager(const QString& dbName,
                     const QString& user,
@@ -96,6 +100,8 @@ public:
 
 
     QSqlDatabase db;
+    // TODO(17): Hide the raw database handle behind a private repository
+    // API so UI/rendering code does not depend on SQL details directly.
 
     void initialiseDatabase(const QString &dbName,
                             const QString &user,
