@@ -5,6 +5,8 @@
 #include <QDebug>
 Car::Car(const QString &id, const QPointF &initialPosition, double speed,double frequency,int puissance,QGraphicsItem *parent)
         : QGraphicsEllipseItem(-1, -1, 2, 2, parent), carId(id), speed(speed), frequency(frequency) , puissance(puissance){
+    // TODO(26): Separate simulation data from QGraphicsItem presentation so
+    // Car can become a lightweight render item backed by a plain data model.
     setBrush(Qt::red);
     setPen(Qt::NoPen);
     setPos(initialPosition);
