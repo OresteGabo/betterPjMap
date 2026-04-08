@@ -8,10 +8,9 @@
 #include <QPainter>
 #include <QPainterPath>
 #include <QRandomGenerator>
-class Car :public QObject, public QGraphicsEllipseItem {
+
+class Car : public QObject, public QGraphicsEllipseItem {
     Q_OBJECT
-
-
 
 public:
     Car(const QString &id, const QPointF &initialPosition,
@@ -20,60 +19,48 @@ public:
         int puissance=QRandomGenerator::global()->bounded(0, 255),
         QGraphicsItem *parent = nullptr);
 
-    void updatePosition(qreal elapsedTime, const QVector<Car*> &cars);
-    double getAntennaGain() const; // Get the antenna gain of the car
-    double getTransmittedPower() const; // Get the transmitted power of the car
-
-
+    double getAntennaGain() const;
+    double getTransmittedPower() const;
     double getSpeed() const;
     double getFrequency() const;
     QString getId() const;
     QPointF getCurrentPosition() const;
     void updatePosition(qreal elapsedTime);
     void setPath(const QVector<QPointF> &path);
-
-    void setCarImage(const QPixmap &image); // Set the car's image
+    void setCarImage(const QPixmap &image);
     void setPath(const QVector<QPointF> &newPath, const QVector<QString> &newNodeIds);
     bool isWithinFrequencyRange(const Car *otherCar) const;
     void setSpeed(double d);
 
 signals:
-    void carClicked(); // Signal emitted when the car is clicked
-
+    void carClicked();
     void reachedEndOfPath(const QString &lastNodeId);
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override {
-        emit carClicked(); // Emit the signal with the car ID
-        QGraphicsEllipseItem::mousePressEvent(event); // Call the base class implementation
+        emit carClicked();
+        QGraphicsEllipseItem::mousePressEvent(event);
     }
+
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
 private:
     QString carId;
     double speed;
-    QVector<QPointF> path; // Path as positions
-    QVector<QString> nodePath; // Path as node IDs
-    double frequency; // Frequency for communication or updates
-    int currentPathIndex = 0; // Index of the next target node
-    QVector<QString> nodeIds;
-
-    QPixmap carImage; // Car image
+    QVector<QPointF> path;
+    QVector<QString> nodePath;
+    double frequency;
+    int currentPathIndex = 0;
+    QPixmap carImage;
     QColor color;
-public:
-    const QColor &getColor() const;
-
-private:
     int puissance;
-public:
-    int getPuissance() const;
-
-private:
-
-    void generatePath(QString qString, QString qString1);
-
     void updateRadius();
     double transmittedPower;
-    double antennaGain ;
+    double antennaGain;
+
+public:
+    const QColor &getColor() const;
+    int getPuissance() const;
 };
 
 #endif // CAR_H
