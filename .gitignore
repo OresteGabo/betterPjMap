@@ -1,11 +1,20 @@
 # CMake build directories
 build/
 Build/
+build-*/
 cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+.cmake/
+build.ninja
+.ninja_deps
+.ninja_log
+compile_commands.json
+CTestTestfile.cmake
+Testing/
+install_manifest.txt
 
 # Qt6 generated files
 moc_*.cpp
@@ -13,6 +22,7 @@ moc_*.h
 qrc_*.cpp
 ui_*.h
 *.autogen/
+*_autogen/
 
 # C++ compiled files
 *.o
@@ -24,10 +34,12 @@ ui_*.h
 *.dll
 *.exe
 *.app
+*.out
 
 # IDE-specific files
 .idea/
 .vscode/
+.cache/
 *.swp
 *.swo
 *.user
@@ -40,6 +52,10 @@ ui_*.h
 *.sqlite
 *.sqlite3
 *.db-journal
+
+# Local app/runtime files
+identifier.sqlite
+config.json
 
 # Logs and temporary files
 *.log
