@@ -5,6 +5,8 @@
 #include <QRandomGenerator>
 #include <QApplication>
 MainWidget::MainWidget(QWidget *parent) : QWidget(parent) {
+    // TODO(20): Extract UI construction into helper methods
+    // (buildToolbar/buildSidebar/buildDebugPanel) to shorten the constructor.
     QJsonObject jsonObj = ConfigManager::loadJsonFile();
     QJsonObject screenObj = jsonObj.value("MainWindow").toObject();
     setWindowTitle("Reseau V2V");
@@ -205,6 +207,8 @@ void MainWidget::onAddCars() {
     int numberOfCars = carsCount->text().toInt();
 
     for (int i = 0; i < numberOfCars; ++i) {
+        // TODO(13): Replace this unbounded retry loop with a limited number
+        // of attempts and surface an error when no valid path can be found.
         while (true) {
             QStringList nodes = adjacencyList.keys();
             QString startNode = nodes[QRandomGenerator::global()->bounded(nodes.size())];
@@ -261,6 +265,8 @@ void MainWidget::onAddCars() {
 
 
 void MainWidget::handleCarPathCompletion(Car *car, const QString &lastNodeId) {
+    // TODO(14): Route continuation should come from a path-planning
+    // service instead of direct DB queries from the widget layer.
     QString nextWayId = DatabaseManager::findNextWay(lastNodeId);
     if (nextWayId.isEmpty()) {
         qDebug() << "No next way found for car:" << car->getId();
@@ -292,7 +298,8 @@ void MainWidget::onDisplayInfo() {
 }
 
 void MainWidget::updateAnimation() {
-
+    // TODO(21): Move the per-tick simulation update into a dedicated
+    // SimulationEngine and let MainWidget only trigger/render results.
     qreal elapsedTime = simulationTimer.restart() / 1000.0; // Time step in seconds
     for (auto &car : cars) {
         car->updatePosition(elapsedTime);
@@ -306,6 +313,8 @@ void MainWidget::updateAnimation() {
 
 void MainWidget::sliderValueChanged(int value) {
     int interval = 1000 / value; // Example: higher value -> faster speed (smaller interval)
+    // TODO(22): Do not multiply the current speed repeatedly here. Store each
+    // car's base speed and derive the effective speed from the slider multiplier.
     for (auto &car : cars) {
         car->setSpeed(car->getSpeed()*value);
     }
@@ -372,6 +381,8 @@ void MainWidget::updateConnections() {
 void MainWidget::updateConnections() {
     constexpr double connectionThreshold = 1e-10; // Example threshold for received power
 
+    // TODO(23): This is O(n^2). Add spatial partitioning if the number of
+    // cars grows, or move the logic into a connection service for easier tuning.
     connections.clear();
 
     for (int i = 0; i < cars.size(); ++i) {
@@ -389,6 +400,8 @@ void MainWidget::updateConnections() {
                         distance
                 );
 
+                // TODO(24): Either use the received-power threshold or
+                // remove the unused variable to keep the intent clear.
                 //if (receivedPower >= connectionThreshold) {
                     connections.append(qMakePair(car1, car2));
                 //}
@@ -428,6 +441,8 @@ void MainWidget::calculateReceivedPower() {
 }
 
 void MainWidget::drawConnections() {
+    // TODO(25): Consider keeping persistent line items or a dedicated
+    // overlay layer instead of deleting/recreating all connection items each frame.
     debugTextArea->clear();
     onDisplayConnections();
     // Clear existing connection visuals
