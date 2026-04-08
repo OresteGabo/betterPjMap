@@ -32,6 +32,8 @@ void CustomScene::loadNodesFromDatabase() {
 }
 
 void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
+    // TODO(11): CustomScene should receive already-loaded geometry from a
+    // repository/service instead of opening its own database connections.
     QString connectionName = QString("%1_connection").arg(type);
     QSqlDatabase db = QSqlDatabase::addDatabase("QMYSQL", connectionName); // Unique connection name
     db.setDatabaseName("OSMData");
@@ -50,6 +52,8 @@ void CustomScene::loadSpecificWays(const QString &type, const QColor &color) {
     query.prepare("SELECT id FROM ways WHERE id IN (SELECT element_id FROM tags WHERE tag_key = :type)");
     query.bindValue(":type", type);
     query.exec();
+    // TODO(07): Avoid the N+1 query pattern below by loading all node
+    // coordinates for a way, or all ways of a type, with joined SQL.
     while (query.next()) {
         QString wayId = query.value(0).toString();
         QVector<QPointF> wayPoints;
@@ -172,6 +176,8 @@ void CustomScene::initializeMailles() {
 }
 
 QPointF CustomScene::latLonToXY(double lat, double lon) {
+    // TODO(12): Cache bounds and screen dimensions in memory. Reading
+    // config.json on every coordinate conversion is expensive.
     QJsonObject jsonObj = loadJsonFile();
     QJsonObject boundObj = jsonObj.value("Bound").toObject();
     QJsonObject screenObj = jsonObj.value("MainWindow").toObject();
@@ -243,6 +249,8 @@ void CustomScene::updateHexagonsWithCars(const QVector<Car*>& cars) {
     }
 }*/
 void CustomScene::updateHexagonsWithCars(const QVector<Car *> &cars) {
+    // TODO(18): Move hexagon coverage and RF calculations into a
+    // simulation/service layer so the scene stays focused on rendering only.
     for (auto& maille : mailles) {
         maille->setIsCarInside(false);  // Reset the flag for each hexagon
 
