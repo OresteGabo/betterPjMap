@@ -9,6 +9,9 @@ DatabaseManager::DatabaseManager(
         const QString& fileName)
 {
     initialiseDatabase(dbName, user, password);
+    // TODO(03): Decide the startup strategy explicitly:
+    // - parse the .osm file automatically when the DB is missing/stale, or
+    // - provide a dedicated import action and skip parsing at startup.
     //parseData(fileName);
     ConfigManager cf = ConfigManager();
     calculateAndSaveBoundsToConfig(cf);
@@ -97,6 +100,8 @@ bool DatabaseManager::parseWays(QXmlStreamReader& xml, QSqlQuery& query) {
 
 // Step 2: Parse OSM file data into the database
 bool DatabaseManager::parseData(const QString &fileName) {
+    // TODO(05): Batch inserts inside explicit transactions and consider
+    // prepared-query reuse to make large OSM imports much faster.
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Failed to open file:" << fileName;
@@ -131,6 +136,8 @@ bool DatabaseManager::parseData(const QString &fileName) {
 void DatabaseManager::createTables() {
     QSqlQuery query;
     db.transaction();
+    // TODO(06): Add indexes for the most common lookups
+    // (tags.element_id, tags.tag_key, ways_nodes.way_id, ways_nodes.node_id).
 
     // Query for creating nodes table
     query.exec("CREATE TABLE IF NOT EXISTS nodes ("
@@ -373,6 +380,8 @@ QString DatabaseManager::getWayNameForNode(const QString &nodeId) {
 }
 
 QPointF DatabaseManager::getPositionByNodeId(QString nodeId){
+    // TODO(10): Remove the dependency on CustomScene here. Coordinate
+    // projection should live in a dedicated projector/bounds class.
     QSqlQuery sql;
     QString quertString=R"(
         select lat,lon from nodes where id = :nodeId
@@ -395,7 +404,8 @@ QVector<QString> DatabaseManager::getNodesOfWaysWithName() {
 }
 
 void DatabaseManager::initialiseDatabase(const QString &dbName, const QString &user, const QString &password) {
-
+    // TODO(08): Support configurable connection names and inject host/user/
+    // password from config so rendering threads do not duplicate credentials.
     db = QSqlDatabase::addDatabase("QMYSQL");
     db.setHostName("127.0.0.1");
     db.setDatabaseName(dbName);
@@ -452,6 +462,8 @@ QString DatabaseManager::getRandomDrivableWay() {
 
 QMap<QString, QVector<QString>> DatabaseManager::buildNodesAdjacencyList() {
     QMap<QString, QVector<QString>> adjacencyList;
+    // TODO(09): Replace repeated per-way/per-node SQL with a single joined
+    // query that returns ordered edges for all drivable ways at once.
 
     QSqlQuery wayQuery;
     // Query to fetch all drivable ways
@@ -546,6 +558,8 @@ QVector<QString> DatabaseManager::findPath(const QString &startNode, const QStri
     return {}; // No path found
 }
 void DatabaseManager::assignPathToCar(Car *car, const QMap<QString, QVector<QString>> &adjacencyList) {
+    // TODO(16): Move path assignment out of DatabaseManager into a
+    // dedicated simulation/path service so DB access and movement logic stay separate.
     while (true) {
         // Choose random start and end nodes
         QStringList nodes = adjacencyList.keys();
